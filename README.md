@@ -7,7 +7,7 @@ CakeUI
 <p>1 - Clone this repo to your plugin directory:</p>
 ```
 cd projectName/Plugin/
-git clone https://github.com/golgher/CakeUI.git
+git clone https://github.com/2km/CakeUI.git
 ```
 <p>2 - Configure projectName/Config/bootstrap.php:</p>
 ```
@@ -40,7 +40,7 @@ public $tooltips = array(
 ```
 <p>Note: Tooltips and placeholder will only work if you're using correctly the FormHelper.</p>
 <h3>Placeholder</h3>
-<p>Works like the tooltips, defining an array in the model class.<p>
+<p>Works like the tooltips, defining an array in the model class.</p>
 ```
 public $placeholder = array(
 	'field_name'=>'placeholder text'
