@@ -1,0 +1,158 @@
+body {
+	padding-top: 50px;
+	padding-bottom: 30px;
+}
+.theme-dropdown .dropdown-menu {
+	position: static;
+	display: block;
+	margin-bottom: 20px;
+}
+.theme-showcase > p > .btn {
+	margin: 5px 0;
+} 
+.table {
+    margin-bottom: 0;
+}
+.pagination {
+    margin: 0;
+}
+.actions li {
+    display: inline;
+    list-style: none outside none;
+}
+div.actions{
+	padding: 0;
+	margin-top: 20px;
+}
+.actions ul{
+	padding: 0;
+}
+#flashMessage{
+	margin-top: 10px;
+}
+#tree-div, div.checkboxContainer{
+	height:400px;
+	width:100%;
+	border:1px solid #CCCCCC;
+	overflow:auto;
+	margin-bottom: 10px;
+}
+div.checkboxInline fieldset {
+	margin:0;
+}
+div.checkboxInline label{
+	display:inline;
+	padding-left:5px;
+}
+.nav-stacked{
+	max-width: 300px;
+	float: left
+}
+.disabled{
+	display:none;
+}
+div.checkboxInline input{
+	margin:0;
+}
+.checkboxContainer .form-group{
+	margin-top:-20px;
+}
+
+.dropdown-menu>li{	
+	position:relative;
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+	cursor:pointer;
+}
+.dropdown-menu .sub-menu {
+    left: 100%;
+    position: absolute;
+    top: 0;
+    display:none;
+    margin-top: -1px;
+	border-top-left-radius:0;
+	border-bottom-left-radius:0;
+	border-left-color:#fff;
+	box-shadow:none;
+}
+.right-caret:after,.left-caret:after{	
+	content:"";
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid transparent;
+    display: inline-block;
+    height: 0;
+    vertical-align: middle;
+    width: 0;
+	margin-left:5px;
+}
+.right-caret:after{	
+	border-left: 5px solid #585858;
+}
+.left-caret:after{	
+	border-right: 5px solid #585858;
+}
+.navbar-left{
+	float:left;
+}
+.loginBar input{
+	margin-right: 4px;
+}
+.jumbotron {
+	padding-top: 20px;
+}
+.gravatar{
+	margin-top: 8px;
+}
+.marginRight{
+	margin-right: 0px !important;
+}
+.popover{
+	z-index: 2010;
+}
+.floatLeft{
+	float: left;
+}
+.floatRight{
+	float: right;
+}
+.floatRight li{
+	float: left;
+}
+.clearAny{
+	clear: both;
+}
+@media (max-width: 767px) {
+	.mobile-clearfix{
+		clear: both;
+	}
+}
+.loginBar,.loginBar a{
+	color: #999;
+	text-decoration: none;
+	vertical-align: middle;
+}
+.loginBar label{
+	font-weight: normal;
+}
+.loginBar a:focus,.loginBar a:hover{
+	color:#FFF;
+}
+.topAlign{
+	margin-top: 27px;
+}
+.cakeui-tooltip {
+    border-radius: 15px;
+    font-size: 10px;
+    line-height: 1;
+    padding: 1px 5px;
+    vertical-align: top;
+    color: #000;
+}
+.cakeui-tooltip:hover {
+	color: #000;
+	text-decoration: none;
+}

@@ -181,4 +181,26 @@ $grid[][2]=$this->Form->end(array("label"=>__('Save'), "class"=>"btn btn-success
 echo $this->Grid->grid($grid);
 
 //Note: The second key of array is the grid size.
+```
 <h3>Tree</h3>
+<p>This Helper uses the <a href='http://jstree.com/' target='_blank'>jstree</a> lib.</p>
+<p>In model:</p>
+```
+public $actsAs = array('Tree');
+```
+<p>In controller:</p>
+```
+public $helpers = array('CakeUI.TreeView');
+public $components = array('CakeUI.Tree'=>array('treeName'=>'Menus'));
+```
+<p>In View:</p>
+```
+<div id="tree-div"></div>
+<?php 
+echo $this->TreeView->generate('#tree-div',array(
+	'actions'=>'/admin/menus/index',
+	'create'=>'/admin/menus/add', //if you don't define, new itens will be generate at the tree
+	'edit'=>'/admin/menus/edit', //if you don't define, itens will be edited at the tree
+	'delete'=>'/admin/menus/delete'));
+?>
+```
