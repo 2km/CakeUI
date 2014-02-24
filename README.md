@@ -21,6 +21,13 @@ public $helpers = array(
 );
 //Note: if you redeclare helpers array in other Controller, remember to define className
 ```
+<p>4 - Using the CakeUI layout</p>
+<p>Define in AppController what layout will be used:</p>
+```
+public function beforeFilter(){
+	$this->layout='CakeUI.default';
+}
+```
 <h2>Using</h2>
 <h3>Tooltips</h3>
 <p>This plugin provide a way to define tooltips for any form field.</p>
@@ -56,11 +63,122 @@ $data[2]['class']='disabled'; //Option to disable access to tab
 //$config['selected']=2 //define which tab will be displayed
 
 echo $this->Html->tabs($data);
+
+//echo $this->Html->tabs($data,$config);
 ```
 <h3>Alerts</h3>
+<p>Displaying alerts using the <a href="http://getbootstrap.com/components/#alerts" target="_blank">bootstrap</a> style.</p>
+```
+//Success alert
+$this->Session->setFlash('The User has been saved','default',array('class'=>'alert alert-success'));
+
+//Error alert
+$this->Session->setFlash(__d('dkmadmin','The User could not be saved. Please, try again.'),'default',array('class'=>'alert alert-danger'));
+```
 <h3>Pagination</h3>
+<p>Element to display the pagination message and buttons with bootstrap style.</p>
+```
+<?php
+	echo $this->element('CakeUI.paging');
+?>
+```
+<h3>Table</h3>
+<p>To use bootstrap style you must to add this class at your table declaration:</p>
+```
+	<table class='table table-striped table-bordered table-condensed'>
+		...
+	</table>
+```
+<p>Learn more about <a href="http://getbootstrap.com/css/#tables" target="_blank">bootstrap tables</a>.</a>
+<h3>Buttons</h3>
+<p>Applying bootstrap style to your application buttons:</p>
+```
+//Actions
+echo $this->Html->link('View',array('action'=>'view',$user['User']['id']),array('class'=>'btn btn-xs btn-info'));
+echo $this->Html->link('Edit',array('action'=>'edit',$user['User']['id']),array('class'=>'btn btn-xs btn-warning'));
+echo $this->Form->postLink('Delete',array('action'=>'delete', $user['User']['id']), array('class'=>'btn btn-xs btn-danger'), sprintf(__d('dkmadmin','Are you sure you want to delete "%s"?'), $user['User']['email']));
+//New
+echo $this->Html->link('New User',array('action'=>'add'),array('class'=>'btn btn-primary'));
+//Submit
+echo $this->Form->end(array("label"=>__('Save'), "class"=>"btn btn-success"));
+```
+<p>Learn more about <a href="http://getbootstrap.com/css/#buttons" target="_blank">bootstrap buttons</a>.</a>
+
 <h3>Dropdown Button</h3>
+<p>Creating dropdown buttons:</p>
+```
+$options[0]['title']='Action';
+$options[0]['link']='/';
+$options[1]['title']='Other Action';
+$options[1]['link']='/users';
+
+$config['size']=(btn-xs | btn-sm | btn-lg) //default size without any class
+$config['color']=(btn-default | btn-primary | btn-success | btn-info | btn-warning | btn-danger | btn-link)
+$config['split']=false;
+$config['dropup']=false;
+
+$config['form']['submit']=false;
+$config['form']['field']='Tmp.operation'
+
+$this->Html->dropdownButton('Options',$options,$config);
+```
+<p>Example: submit a form with an action value.</p>
+```
+$options[]['title']='Save and exit';		//Action Value - 0
+$options[]['title']='Save and continue';	//Action Value - 1
+$config['color'] = 'btn-primary';
+$config['split'] = true;
+$config['dropup'] = true;
+$config['form']['submit']=true;
+
+echo $this->Html->dropdownButton('Save',$options,$config);
+```
+<p>Note: the first key of array will be used for the value of action.</p>
 <h3>Breadcrumb</h3>
+```
+$data[0]['title']='Home';
+$data[0]['link']='/';
+$data[1]['title']='Users';
+$data[1]['link']='/users/index';
+$data[2]['title']='Profile';
+$data[2]['link']='#'; //this action will create a last item (disabled, without link)
+
+echo $this->Html->breadcrumb($data);
+```
 <h3>Inline Form (field + button)</h3>
+```
+/*
+Params:
+	- $model
+	- $fieldName
+	- $buttonLabel
+	- $options:
+		$options['Form']['url']='/other/action';
+		
+		$options['Field']['placeholder']='placeholder text';
+		$options['Field']['class']='btn-xs';
+
+		$options['Button']['place']='before';
+		$options['Button']['class']='btn btn-xs btn-primary'
+
+*/
+$this->Form->inlineForm('User','email','Send',array(
+		'Field'=>array('placeholder'=>'Type your e-mail'),
+		'Button'=>array('place'=>'after','class'=>'btn btn-success')));
+```
+<h3>Grid</h3>
+<p>Helper to generate html using the bootstrap grid system.</p>
+```
+//In Controller Class
+public $helpers = array('CakeUI.Grid');
+
+//In View
+$grid[][2]='Html Content';
+$grid[][4]=$this->Form->input('name');
+$grid[][4]=$this->Form->input('telephone');
+$grid[][2]=$this->Form->end(array("label"=>__('Save'), "class"=>"btn btn-success"));
+
+echo $this->Grid->grid($grid);
+
+//Note: The second key of array is the grid size.
 <h3>Tree</h3>
-<h3>Css Grid</h3>
