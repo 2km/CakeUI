@@ -31,9 +31,7 @@ public function beforeFilter(){
 <h2>Using</h2>
 <h3>Tooltips</h3>
 <p>This plugin provide a way to define tooltips for any form field.</p>
-<p>You have to set the tooltip text in the model class, 
-	after doing this an question mark will appear after the label, 
-	and the tooltip text will be displayed on mouseover.</p>
+<p>You have to set the tooltip text in the model class, after doing this an question mark will appear after the label, and the tooltip text will be displayed on mouseover.</p>
 ```
 public $tooltips = array(
 	'field'			=>	'Tooltip text for this field',
