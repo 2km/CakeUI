@@ -71,7 +71,9 @@ echo $this->Html->tabs($data);
 $this->Session->setFlash('The User has been saved','default',array('class'=>'alert alert-success'));
 
 //Error alert
-$this->Session->setFlash(__d('dkmadmin','The User could not be saved. Please, try again.'),'default',array('class'=>'alert alert-danger'));
+$this->Session->setFlash('The User could not be saved. Please, try again.','default',
+	array('class'=>'alert alert-danger')
+);
 ```
 <h3>Pagination</h3>
 <p>Element to display the pagination message and buttons with bootstrap style.</p>
@@ -81,7 +83,7 @@ $this->Session->setFlash(__d('dkmadmin','The User could not be saved. Please, tr
 ?>
 ```
 <h3>Table</h3>
-<p>To use bootstrap style you must to add this class at your table declaration:</p>
+<p>To use bootstrap style you must add this class in table declaration:</p>
 ```
 	<table class='table table-striped table-bordered table-condensed'>
 		...
@@ -89,16 +91,25 @@ $this->Session->setFlash(__d('dkmadmin','The User could not be saved. Please, tr
 ```
 <p>Learn more about <a href="http://getbootstrap.com/css/#tables" target="_blank">bootstrap tables</a>.</a>
 <h3>Buttons</h3>
-<p>Applying bootstrap style to your application buttons:</p>
+<p>Applying bootstrap style in application buttons:</p>
 ```
 //Actions
-echo $this->Html->link('View',array('action'=>'view',$user['User']['id']),array('class'=>'btn btn-xs btn-info'));
-echo $this->Html->link('Edit',array('action'=>'edit',$user['User']['id']),array('class'=>'btn btn-xs btn-warning'));
-echo $this->Form->postLink('Delete',array('action'=>'delete', $user['User']['id']), array('class'=>'btn btn-xs btn-danger'), sprintf(__d('dkmadmin','Are you sure you want to delete "%s"?'), $user['User']['email']));
+echo $this->Html->link('View',array('action'=>'view',$user['User']['id']),
+	<strong>array('class'=>'btn btn-xs btn-info')</strong>
+);
+echo $this->Html->link('Edit',array('action'=>'edit',$user['User']['id']),
+	<strong>array('class'=>'btn btn-xs btn-warning')</strong>
+);
+echo $this->Form->postLink('Delete',array('action'=>'delete', $user['User']['id']), 
+	<strong>array('class'=>'btn btn-xs btn-danger'), </strong>
+	sprintf('Are you sure you want to delete "%s"?', $user['User']['email'])
+);
 //New
-echo $this->Html->link('New User',array('action'=>'add'),array('class'=>'btn btn-primary'));
+echo $this->Html->link('New User',array('action'=>'add'),
+	<strong>array('class'=>'btn btn-primary')</strong>
+);
 //Submit
-echo $this->Form->end(array("label"=>__('Save'), "class"=>"btn btn-success"));
+echo $this->Form->end(array("label"=>__('Save'), <strong>"class"=>"btn btn-success")</strong>);
 ```
 <p>Learn more about <a href="http://getbootstrap.com/css/#buttons" target="_blank">bootstrap buttons</a>.</a>
 

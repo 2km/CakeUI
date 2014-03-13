@@ -109,8 +109,7 @@ class BootstrapFormHelper extends FormHelper {
 		if(!isset($options['Field'])){$options['Field']=null;}
 		if(!isset($options['Form'])){$options['Form']=null;}
 
-		$defaultConfig['Field']['label']=false;
-		$defaultConfig['Field']['div']=false;		
+		$defaultConfig['Field']['label']=false;		
 		$defaultConfig['Button']['place']='after';
 		$defaultConfig['Button']['class']='btn btn-default';
 		$defaultConfig['Form']=null;
@@ -119,6 +118,11 @@ class BootstrapFormHelper extends FormHelper {
 		$fieldOptions = am($defaultConfig['Field'],$options['Field']);
 		$formOptions = am($defaultConfig['Form'],$options['Form']);
 
+		if(isset($fieldOptions['div']['class'])){
+			$fieldOptions['div']['class'].=" input-group";
+		}else{
+			$fieldOptions['div']['class']="input-group";
+		}
 		$button = '<span class="input-group-btn">'.$this->button($buttonName,$buttonOptions).'</span>';
 		if($buttonOptions['place']=='after'){
 			$fieldOptions['after']=$button;	
@@ -127,9 +131,7 @@ class BootstrapFormHelper extends FormHelper {
 		}
 
 		$html = $this->create($model,$formOptions);
-		$html .='<div class="input-group">';
-		$html .=$this->input($fieldName,$fieldOptions);     
-		$html.='</div>';
+		$html .=$this->input($fieldName,$fieldOptions);
 		$html.='</form>';
 		return $html;
 	}
