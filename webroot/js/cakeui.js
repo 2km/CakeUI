@@ -14,4 +14,10 @@ $(function(){
 		root.find('.left-caret').toggleClass('right-caret left-caret');
 		root.find('.sub-menu:visible').hide();
 	});
+	$('.modalButton').click(function(){
+	  	$('#modal-content').load($(this).attr('href'),function(result){
+		    $('.modalWindow').modal({show:true});
+		});
+		return false;
+	});
 });
