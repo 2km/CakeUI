@@ -1,0 +1,34 @@
+{
+    "name": "2km/CakeUI",
+    "description": "CakePHP UI",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "cakeui", "ui"],
+    "homepage": "https://github.com/2km/CakeUI",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": Daniel Golgher",
+            "homepage": "http://2km.com.br",
+            "role": "Author"
+        },
+        {
+            "name": "Carlos Eduardo Fonseca e Pires",
+            "homepage": "http://2km.com.br",
+            "role": "Author"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/2km/CakeUI/README.md",
+        "source": "https://github.com/2km/CakeUI"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "composer/installers": "*"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master"
+        },
+        "installer-name": "CakeUI"
+    }
+}

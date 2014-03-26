@@ -27,7 +27,7 @@ class TreeComponent extends Object {
 			$this->displayField = $this->model->displayField;
 		}
 	}
-    public function startup(&$controller) {
+    public function startup($controller) {
 		if(isset($controller->request->query["operation"]) || isset($controller->request->data["operation"])){
 			if($controller->RequestHandler->isAjax()){
 				$controller->autoRender=false;
