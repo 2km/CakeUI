@@ -20,4 +20,19 @@ $(function(){
 		});
 		return false;
 	});
+	 $(":input").inputmask();
+	 $('.cel-inputmask').keyup(function(){
+	 	v = $(this).val();
+	 	v = v.replace(/\D/g,"");
+	 	if(v.length<=10){
+	 		changeMask('.cel-inputmask','(99)9999-9999[9]');
+	 	} else{
+	 		changeMask('.cel-inputmask','(99)9999[9]-9999');
+	 	}
+	 	return false;
+	 })
 });
+function changeMask(field,maskToUse){
+	$(field).inputmask("remove");
+	$(field).inputmask({"mask":maskToUse});
+}
