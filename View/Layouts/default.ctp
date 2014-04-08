@@ -36,6 +36,7 @@
     <?php
       echo $this->Html->script(array(
         '/CakeUI/js/bootstrap/bootstrap.min',
+        '/CakeUI/js/inputmask/min/jquery.inputmask',
         '/CakeUI/js/cakeui',
       ));
       echo $this->fetch('script');
