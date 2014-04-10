@@ -30,7 +30,8 @@ $(function(){
 	 		changeMask('.cel-inputmask','(99)9999[9]-9999');
 	 	}
 	 	return false;
-	 })
+	 });
+	 $('.money-inputmask').maskMoney({thousands:'.', decimal:','});
 });
 function changeMask(field,maskToUse){
 	$(field).inputmask("remove");
