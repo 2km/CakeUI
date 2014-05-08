@@ -12,7 +12,7 @@ App::uses('FormHelper', 'View/Helper');
 class BootstrapFormHelper extends FormHelper {
 	
 	public $helpers = array('Html', 'Js'=>array('Jquery'));
-	private $included = false;
+	private $once = array();
 	private $counter = 0;
 
 	protected $_inputDefaults = array(
@@ -108,15 +108,7 @@ class BootstrapFormHelper extends FormHelper {
 		
 		return parent::input($fieldName, $options);
 	}
-	// private function _getFieldName($fieldName){
-	// 	if (strpos($fieldName, '.') !== false) {
-	// 		$fieldElements = explode('.', $fieldName);
-	// 		$text = array_pop($fieldElements);
-	// 	} else {
-	// 		$text = $fieldName;
-	// 	}
-	// 	return $text;
-	// }
+	
 	public function inlineForm($model,$fieldName,$buttonName,$options){
 		if(!isset($options['Button'])){$options['Button']=null;}
 		if(!isset($options['Field'])){$options['Field']=null;}
@@ -147,6 +139,22 @@ class BootstrapFormHelper extends FormHelper {
 		$html .=$this->input($fieldName,$fieldOptions);
 		$html.='</form>';
 		return $html;
+	}
+
+	public function select($fieldName, $options = array(), $attributes = array()){
+		$select_source = parent::select($fieldName, $options, $attributes);
+		
+		$js = '$("#'.$this->domId($fieldName).'").select2();';
+
+		echo $this->Html->script('/CakeUI/js/select2-3.4.8/select2.min',array('inline'=>false));
+		if(empty($this->once['/CakeUI/css/select2-3.4.8/select2.css']) && empty($this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css'])){
+			$this->once['/CakeUI/css/select2-3.4.8/select2.css']=true;
+			$this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css']=true;
+			echo $this->Html->css(array('/CakeUI/css/select2-3.4.8/select2.css','/CakeUI/css/select2-3.4.8/select2-bootstrap.css'),null,array('inline'=>false));	
+		}
+		
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
+		return $select_source;
 	}
 }
 ?>
