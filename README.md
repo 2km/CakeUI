@@ -46,6 +46,19 @@ public $placeholder = array(
 	'field_name'=>'placeholder text'
 );
 ```
+<h3>Masks</h3>
+<p>Works like the tooltips, defining an array in the model class.</p>
+<p>We use this lib for mask inputs http://github.com/RobinHerbots/jquery.inputmask</p>
+```
+public $mask = array(
+	'phone' => "'mask': '(99)9999-9999'",  
+	'zipcode' => array('class'=>'zipcode'),
+	'money' => array('class'=>'money-inputmask'),
+);
+```
+<p>In the second example, we have defined a class, this way, we can use other lib to mask the input.</p>
+<p>We also included https://github.com/plentz/jquery-maskmoney, to mask money fields.</p>
+
 <h3>Tabs and Pills</h3>
 ```
 $data[0]['title']='tab1';
@@ -213,3 +226,6 @@ echo $this->TreeView->generate('#tree-div',array(
 	'delete'=>'/admin/menus/delete'));
 ?>
 ```
+<h3>Select2</h3>
+<p>All select fields will automatic changed to select2</p>
+<p>You can lear more about <a href='https://github.com/ivaynberg/select2/'>select2 here</a>.</p>
