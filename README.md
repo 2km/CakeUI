@@ -228,4 +228,4 @@ echo $this->TreeView->generate('#tree-div',array(
 ```
 <h3>Select2</h3>
 <p>All select fields will automatic changed to select2</p>
-<p>You can lear more about <a href='https://github.com/ivaynberg/select2/'>select2 here</a>.</p>
+<p>You can learn more about <a href='https://github.com/ivaynberg/select2/'>select2 here</a>.</p>
