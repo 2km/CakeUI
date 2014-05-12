@@ -229,3 +229,26 @@ echo $this->TreeView->generate('#tree-div',array(
 <h3>Select2</h3>
 <p>All select fields will automatic changed to select2</p>
 <p>You can learn more about <a href='https://github.com/ivaynberg/select2/'>select2 here</a>.</p>
+
+<h3>Ajax File Upload</h3>
+<p>Generate a button to upload one or multiple files.</p>
+<p>In View:</p>
+```
+//Single file:
+echo $this->Form->ajaxUpload('photo',array('size'=>'"200px"','label'=>'Upload photo'));
+//Multiple
+echo $this->Form->ajaxUpload('photo',array('size'=>'"200px"','label'=>'Upload photos','multiple'=>'true'));
+```
+<p>In Controller:</p>
+```
+public $components = array(
+		'CakeUI.Upload'=>array(
+			'photo'=>array(
+				'size'=>5248880,
+				'resize'=>array('small'=>240),
+				'allow'=>array('jpg','jpeg','gif','png')
+			)
+		)
+	);
+```
+<p>You can learn more about <a href='http://docs.fineuploader.com/'>fineuploader here</a>.</p>

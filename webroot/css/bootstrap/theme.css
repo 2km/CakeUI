@@ -156,3 +156,12 @@ div.checkboxInline input{
 	color: #000;
 	text-decoration: none;
 }
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.eot');
+  src: url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), 
+  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.woff') format('woff'), 
+  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), 
+  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
