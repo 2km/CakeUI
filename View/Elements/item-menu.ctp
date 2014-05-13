@@ -8,7 +8,7 @@ if($hasChildren){
 	}
 	
 }else{
-	$data['Menu']['link']=empty($data['Menu']['link'])?'#':$data['Menu']['link'];
-	echo $this->Html->link(__($data['Menu']['name']),$data['Menu']['link']);
+	$data['Menu']['url']=empty($data['Menu']['url'])?'#':$data['Menu']['url'];
+	echo $this->Html->link(__($data['Menu']['name']),$data['Menu']['url']);
 }
 ?>
