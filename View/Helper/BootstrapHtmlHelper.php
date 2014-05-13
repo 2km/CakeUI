@@ -58,7 +58,7 @@ class BootstrapHtmlHelper extends HtmlHelper {
 			if(isset($value['class'])){
 				$class = $value['class'];
 			}
-			$link = $this->link($value['title'],'#'.Inflector::slug($value['title']).$key,array("data-toggle"=>"tab"));
+			$link = $this->link($value['title'],'#'.Inflector::slug($value['title']).$this->counter.$key,array("data-toggle"=>"tab"));
 			if(isset($value['class']) && $value['class']=='disabled'){
 				$link = $this->link($value['title'],'#');
 			}
@@ -73,14 +73,14 @@ class BootstrapHtmlHelper extends HtmlHelper {
 		$html .= '<div class="tab-content">';
 		foreach ($data as $key => $value) {
 			if($firstKey == $key){
-				$html.='<div class="tab-pane active" id="'.(Inflector::slug($value['title']).$key).'">'.$value['content'].'</div>';
+				$html.='<div class="tab-pane active" id="'.(Inflector::slug($value['title']).$this->counter.$key).'">'.$value['content'].'</div>';
 			} else {
-				$html.='<div class="tab-pane" id="'.(Inflector::slug($value['title']).$key).'">'.$value['content'].'</div>';
+				$html.='<div class="tab-pane" id="'.(Inflector::slug($value['title']).$this->counter.$key).'">'.$value['content'].'</div>';
 			}
 		}
 		$html.='</div><div class="clearAny"></div>';
 		if(isset($config['selected'])){
-			echo $this->scriptBlock('$("#'.$tabId.' a[href=\"#'.(Inflector::slug($data[$config['selected']]['title']).$config['selected']).'\"]").tab("show");',array('inline'=>false));	
+			echo $this->scriptBlock('$("#'.$tabId.' a[href=\"#'.(Inflector::slug($data[$config['selected']]['title']).$this->counter.$config['selected']).'\"]").tab("show");',array('inline'=>false));	
 		}
 
 		return $html;
