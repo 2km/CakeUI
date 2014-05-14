@@ -146,20 +146,21 @@ class BootstrapFormHelper extends FormHelper {
 
 	public function select($fieldName, $options = array(), $attributes = array()){
 		$select_source = parent::select($fieldName, $options, $attributes);
-		
-		$js = '$("#'.$this->domId($fieldName).'").select2();';
+		if(!isset($attributes['multiple']) || (isset($attributes['multiple']) && $attributes['multiple']!=='checkbox')){
+			$js = '$("#'.$this->domId($fieldName).'").select2();';
 
-		echo $this->Html->script('/CakeUI/js/select2-3.4.8/select2.min',array('inline'=>false));
-		if(empty($this->once['/CakeUI/css/select2-3.4.8/select2.css']) && empty($this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css'])){
-			$this->once['/CakeUI/css/select2-3.4.8/select2.css']=true;
-			$this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css']=true;
-			echo $this->Html->css(array('/CakeUI/css/select2-3.4.8/select2.css','/CakeUI/css/select2-3.4.8/select2-bootstrap.css'),null,array('inline'=>false));	
+			echo $this->Html->script('/CakeUI/js/select2-3.4.8/select2.min',array('inline'=>false));
+			if(empty($this->once['/CakeUI/css/select2-3.4.8/select2.css']) && empty($this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css'])){
+				$this->once['/CakeUI/css/select2-3.4.8/select2.css']=true;
+				$this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css']=true;
+				echo $this->Html->css(array('/CakeUI/css/select2-3.4.8/select2.css','/CakeUI/css/select2-3.4.8/select2-bootstrap.css'),null,array('inline'=>false));	
+			}
+			
+			echo $this->Html->scriptBlock($js,array('inline'=>false));
 		}
-		
-		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		return $select_source;
 	}
-	public function ajaxUpload($fieldName, $uploadOptions = array(),$onlyHtml = false){
+	public function ajaxUpload($fieldName, $uploadOptions = array()){
 		$jsId = $this->domId($fieldName);
 		$this->setEntity($fieldName);
 		$field_array = $this->entity();
@@ -346,6 +347,188 @@ $("#'.$jsId.'").fineUploader({
 		$this->ajaxUploadCounter++;
 
 		return $html;
+	}
+	public function textareaCounter($fieldName, $options = array()){
+		$jsId = $this->domId($fieldName);
+		$options += array(
+			'maxChars'=>200,
+			'maxCharsWarning'=>180
+		);
+		$json_options = '{';
+		if(isset($options['maxChars'])){
+			$json_options .="'maxChars':".$options['maxChars'].",";
+			unset($options['maxChars']);
+		}
+		if(isset($options['maxCharsWarning'])){
+			$json_options .="'maxCharsWarning':".$options['maxCharsWarning'].",";
+			unset($options['maxCharsWarning']);
+		}
+		$json_options .= '}';
+
+		echo $this->Html->script('/CakeUI/js/jqCharCounter/jquery.jqEasyCharCounter.min.js',array('inline'=>false));
+		$js = '$("#'.$jsId.'").jqEasyCounter('.$json_options.');';
+		echo $this->Html->scriptBlock($js,array('inline'=>false));		
+		$options['type']='textarea';
+		return $this->input($fieldName,$options);
+	}
+	public function starRating($fieldName, $options = array()){
+		$formName = $this->_name($fieldName);
+		$jsId = $this->domId($fieldName);
+		$this->setEntity($fieldName);
+		$field_array = $this->entity();
+		$model = $field_array[0];
+		$field = array_pop($field_array);
+
+		$html = null;
+		if($options['label']!==false){
+			if(isset($options['label'])){
+				$html=$this->label($fieldName,$options['label']);	
+			} else{
+				$html=$this->label($fieldName,$label = __(Inflector::humanize(Inflector::underscore($field))));	
+			}	
+		}
+		
+		$html .= '<div id="star-'.$jsId.'" class="starRating"></div>';
+		if ($this->isFieldError($fieldName)) {
+    		$html .= '<div class="has-error has-feedback"><span class="help-block">'.$this->error($fieldName,array('div'=>true)).'</span></div>';
+		}
+		
+		echo $this->Html->script('/CakeUI/js/raty/jquery.raty.min.js',array('inline'=>false));
+		
+		$readonly = $score = null;
+		if($this->value($fieldName)){
+			$score = 'score: '.$this->value($fieldName);
+		}
+		if(isset($options['disabled']) && $options['disabled']==true){
+			$readonly = 'readOnly: true,';
+		}
+		$js = '$("#star-'.$jsId.'").raty({
+			starHalf    : "'.$this->Html->url("/CakeUI/js/raty/img/star-half.png").'",
+			starOff     : "'.$this->Html->url("/CakeUI/js/raty/img/star-off.png").'",
+			starOn      : "'.$this->Html->url("/CakeUI/js/raty/img/star-on.png").'",
+			scoreName      : "'.$formName.'",
+			targetType	: "number",
+			'.$readonly.$score.'
+		});';
+		$test = '$("#'.$jsId.'").raty';
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
+		return $html;
+	}
+	public function wysiwyg($fieldName, $options = array()){
+		$jsId = $this->domId($fieldName);
+		$scripts = array('//tinymce.cachefly.net/4.0/tinymce.min.js');
+		echo $this->Html->script($scripts,array('inline'=>false));
+		$js_options = null;
+		if(isset($options['disabled']) && $options['disabled']==true){
+			$js_options = 'readonly : 1,';
+		}
+		$js = 'tinymce.init({
+    			selector: "#'.$jsId.'",
+    			'.$js_options.'
+    			plugins: [
+					"advlist autolink lists link image charmap print preview anchor",
+					"searchreplace visualblocks code fullscreen",
+					"insertdatetime media table contextmenu paste"
+				],
+				menubar: false,
+				toolbar: "bold italic alignleft aligncenter alignright alignjustify bullist numlist outdent indent link"
+		});';
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
+		if(!isset($options['rows'])){
+			$options['rows']=5;	
+		}
+		if(!isset($options['cols'])){
+			$options['cols']=48;
+		}
+		return $this->input($fieldName,$options)."<br />";
+	}
+	public function datePicker($fieldName, $options = array(), $jsOptions=array()){
+		$jsId = $this->domId($fieldName);
+		$jsOptions+=array(
+			'format'=> 'dd/mm/yyyy',
+			'autoclose'=> 'true',
+			'todayHighlight'=>'true',
+			'startView'=> 0,
+			'orientation'=>'left',
+			'locale'=>'pt-BR'
+		);
+		$scripts[] = '/CakeUI/js/bootstrap-datepicker/bootstrap-datepicker';
+		$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];
+		echo $this->Html->script($scripts,array('inline'=>false));
+		$css = '/CakeUI/css/bootstrap-datepicker/datepicker3';
+		if(!isset($this->once[$css])){
+			$this->once[$css]=true;
+			echo $this->Html->css($css,null,array('inline'=>false));	
+		}
+
+		$js = '$("#'.$jsId.'").datepicker({
+					format: "dd/mm/yy",
+					autoclose: "'.$jsOptions['autoclose'].'",
+					todayHighlight: "'.$jsOptions['todayHighlight'].'",
+					startView: "'.$jsOptions['startView'].'",
+					orientation: "'.$jsOptions['orientation'].'",
+					language:"'.$jsOptions['locale'].'"
+				});';
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
+		if (!isset($options['type'])) {
+			$options['type']='text';
+		}
+		return $this->input($fieldName,$options);
+	}
+	public function datePickerRange($fieldName1, $fieldName2, $options1 = array(),$options2 = array(), $jsOptions = array()){
+		$this->setEntity($fieldName1);
+		$field_array = $this->entity();
+		$model = $field_array[0];
+		$field = array_pop($field_array);
+
+		$jsOptions+=array(
+			'format'=> 'dd/mm/yyyy',
+			'autoclose'=> 'true',
+			'todayHighlight'=>'true',
+			'startView'=> 0,
+			'orientation'=>'left',
+			'locale'=>'pt-BR',
+			'rangeLabel'=>'até'
+		);
+		if(isset($options1['label'])){
+			$label = $options1['label'];
+		} else{
+			$label =$this->label($fieldName1,__(Inflector::humanize(Inflector::underscore($field))));
+		}
+		$options1+=array(
+			'div'=>array('class'=>'input-group form-group input-daterange','id'=>'datepicker-'.$this->counter),
+			'after'=>'<span class="input-group-addon">'.$jsOptions['rangeLabel'].'</span>',
+			'label'=>false
+		);
+		$options2+=array(
+			'div'=>false,
+			'label'=>false
+		);
+		$scripts[] = '/CakeUI/js/bootstrap-datepicker/bootstrap-datepicker';
+		$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];
+		echo $this->Html->script($scripts,array('inline'=>false));
+		$css = '/CakeUI/css/bootstrap-datepicker/datepicker3';
+		if(!isset($this->once[$css])){
+			$this->once[$css]=true;
+			echo $this->Html->css($css,null,array('inline'=>false));	
+		}
+
+		$js = '$("#datepicker-'.$this->counter.'").datepicker({
+					format: "dd/mm/yy",
+					autoclose: "'.$jsOptions['autoclose'].'",
+					todayHighlight: "'.$jsOptions['todayHighlight'].'",
+					startView: "'.$jsOptions['startView'].'",
+					orientation: "'.$jsOptions['orientation'].'",
+					language:"'.$jsOptions['locale'].'"
+				});';
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
+		if (!isset($options['type'])) {
+			$options['type']='text';
+		}	
+		$options1['after']='<span class="input-group-addon">'.$jsOptions['rangeLabel'].'</span>';
+		$options1['after'].=$this->input($fieldName2,$options2);
+		$this->counter++;
+		return $label.$this->input($fieldName1,$options1);
 	}
 }
 ?>
