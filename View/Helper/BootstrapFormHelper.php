@@ -418,6 +418,9 @@ $("#'.$jsId.'").fineUploader({
 		$jsId = $this->domId($fieldName);
 		$scripts = array('//tinymce.cachefly.net/4.0/tinymce.min.js');
 		echo $this->Html->script($scripts,array('inline'=>false));
+		if (!array_key_exists('entity_encoding',$js_options)) {
+			$js_options['entity_encoding']='raw';
+		}
 		if (!array_key_exists('toolbar',$js_options)) {
 			$js_options['toolbar']="bold italic alignleft aligncenter alignright alignjustify bullist numlist outdent indent link code";
 		}
