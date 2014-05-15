@@ -414,24 +414,31 @@ $("#'.$jsId.'").fineUploader({
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		return $html;
 	}
-	public function wysiwyg($fieldName, $options = array()){
+	public function wysiwyg($fieldName, $options = array(), $js_options = array()){
 		$jsId = $this->domId($fieldName);
 		$scripts = array('//tinymce.cachefly.net/4.0/tinymce.min.js');
 		echo $this->Html->script($scripts,array('inline'=>false));
-		$js_options = null;
-		if(isset($options['disabled']) && $options['disabled']==true){
-			$js_options = 'readonly : 1,';
+		if (!array_key_exists('toolbar',$js_options)) {
+			$js_options['toolbar']="bold italic alignleft aligncenter alignright alignjustify bullist numlist outdent indent link code";
 		}
+		if (!array_key_exists('plugins',$js_options)) {
+			$js_options['plugins']=array(
+				"advlist autolink lists link image charmap print preview anchor",
+				"searchreplace visualblocks code fullscreen",
+				"insertdatetime media table contextmenu paste"
+			);
+		}
+		if (!array_key_exists('menubar',$js_options)) {
+			$js_options['menubar']=false;
+		}
+		if(isset($options['disabled']) && $options['disabled']==true){
+			$js_options['readonly']=1;
+		}
+		$js_options = json_encode($js_options);
+		$js_options = substr($js_options, 1,strlen($js_options)-2);
 		$js = 'tinymce.init({
     			selector: "#'.$jsId.'",
     			'.$js_options.'
-    			plugins: [
-					"advlist autolink lists link image charmap print preview anchor",
-					"searchreplace visualblocks code fullscreen",
-					"insertdatetime media table contextmenu paste"
-				],
-				menubar: false,
-				toolbar: "bold italic alignleft aligncenter alignright alignjustify bullist numlist outdent indent link"
 		});';
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		if(!isset($options['rows'])){
