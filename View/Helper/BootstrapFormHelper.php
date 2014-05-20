@@ -109,6 +109,11 @@ class BootstrapFormHelper extends FormHelper {
 				$options['after'].='<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
 			}
 		}
+		if(isset($options['multiple']) && $options['multiple']==='checkbox'){
+			$options['class']=null;
+			$options['between']='<div class="checkbox-container">';
+			$options['after']='</div>';
+		}
 		return parent::input($fieldName, $options);
 	}
 	
@@ -380,14 +385,13 @@ $("#'.$jsId.'").fineUploader({
 		$field = array_pop($field_array);
 
 		$html = null;
-		if($options['label']!==false){
-			if(isset($options['label'])){
-				$html=$this->label($fieldName,$options['label']);	
-			} else{
-				$html=$this->label($fieldName,$label = __(Inflector::humanize(Inflector::underscore($field))));	
-			}	
-		}
 		
+		if(isset($options['label'])){
+			$html=$this->label($fieldName,$options['label']);	
+		} else{
+			$html=$this->label($fieldName,$label = __(Inflector::humanize(Inflector::underscore($field))));	
+		}	
+	
 		$html .= '<div id="star-'.$jsId.'" class="starRating"></div>';
 		if ($this->isFieldError($fieldName)) {
     		$html .= '<div class="has-error has-feedback"><span class="help-block">'.$this->error($fieldName,array('div'=>true)).'</span></div>';
@@ -453,7 +457,10 @@ $("#'.$jsId.'").fineUploader({
 			'locale'=>'pt-BR'
 		);
 		$scripts[] = '/CakeUI/js/bootstrap-datepicker/bootstrap-datepicker';
-		$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];
+		if($jsOptions['locale']!==false){
+			$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];	
+		}
+		
 		echo $this->Html->script($scripts,array('inline'=>false));
 		$css = '/CakeUI/css/bootstrap-datepicker/datepicker3';
 		if(!isset($this->once[$css])){
@@ -462,13 +469,15 @@ $("#'.$jsId.'").fineUploader({
 		}
 
 		$js = '$("#'.$jsId.'").datepicker({
-					format: "dd/mm/yy",
+					format: "'.$jsOptions['format'].'",
 					autoclose: "'.$jsOptions['autoclose'].'",
 					todayHighlight: "'.$jsOptions['todayHighlight'].'",
 					startView: "'.$jsOptions['startView'].'",
-					orientation: "'.$jsOptions['orientation'].'",
-					language:"'.$jsOptions['locale'].'"
-				});';
+					orientation: "'.$jsOptions['orientation'].'",';
+		if($jsOptions['locale']!==false){
+					$js .= 'language:"'.$jsOptions['locale'].'"';
+		}
+				$js .= '});';
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		if (!isset($options['type'])) {
 			$options['type']='text';
@@ -480,7 +489,15 @@ $("#'.$jsId.'").fineUploader({
 		$field_array = $this->entity();
 		$model = $field_array[0];
 		$field = array_pop($field_array);
-
+		if(!is_array($options1)){
+			$options1 = array();
+		}
+		if(!is_array($options2)){
+			$options2=array();
+		}
+		if(!is_array($jsOptions)){
+			$jsOptions = array();
+		}
 		$jsOptions+=array(
 			'format'=> 'dd/mm/yyyy',
 			'autoclose'=> 'true',
@@ -491,21 +508,22 @@ $("#'.$jsId.'").fineUploader({
 			'rangeLabel'=>'até'
 		);
 		if(isset($options1['label'])){
-			$label = $options1['label'];
+			$label = $this->label($fieldName1,$options1['label']);
 		} else{
-			$label =$this->label($fieldName1,__(Inflector::humanize(Inflector::underscore($field))));
+			$label = $this->label($fieldName1,__(Inflector::humanize(Inflector::underscore($field))));
 		}
 		$options1+=array(
 			'div'=>array('class'=>'input-group form-group input-daterange','id'=>'datepicker-'.$this->counter),
-			'after'=>'<span class="input-group-addon">'.$jsOptions['rangeLabel'].'</span>',
-			'label'=>false
 		);
+		$options1['label']=false;
 		$options2+=array(
 			'div'=>false,
 			'label'=>false
 		);
 		$scripts[] = '/CakeUI/js/bootstrap-datepicker/bootstrap-datepicker';
-		$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];
+		if($jsOptions['locale']!==false){
+			$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];
+		}
 		echo $this->Html->script($scripts,array('inline'=>false));
 		$css = '/CakeUI/css/bootstrap-datepicker/datepicker3';
 		if(!isset($this->once[$css])){
@@ -514,13 +532,15 @@ $("#'.$jsId.'").fineUploader({
 		}
 
 		$js = '$("#datepicker-'.$this->counter.'").datepicker({
-					format: "dd/mm/yy",
+					format: "'.$jsOptions['format'].'",
 					autoclose: "'.$jsOptions['autoclose'].'",
 					todayHighlight: "'.$jsOptions['todayHighlight'].'",
 					startView: "'.$jsOptions['startView'].'",
-					orientation: "'.$jsOptions['orientation'].'",
-					language:"'.$jsOptions['locale'].'"
-				});';
+					orientation: "'.$jsOptions['orientation'].'",';
+		if($jsOptions['locale']!==false){
+					$js .= 'language:"'.$jsOptions['locale'].'"';
+		}
+		$js .= '});';
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		if (!isset($options['type'])) {
 			$options['type']='text';
