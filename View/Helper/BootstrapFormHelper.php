@@ -195,13 +195,15 @@ class BootstrapFormHelper extends FormHelper {
 				$uploadOptions['success'] = 'if(responseJSON.success){
 					$("<input>").attr("type","hidden").attr("name","data\['.$model.'\]\["+position+"\]\['.$field.'\]").attr("value",responseJSON.filename).appendTo("#'.$jsId.'-'.$this->ajaxUploadCounter.'");';
 					if($uploadOptions['displayFile']==true){
-						//$uploadOptions['success'] .= '$("<img>").attr("src","'.$this->webroot.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/"+responseJSON.filename).attr("id","target"+position).appendTo("#'.$jsId.'-'.$this->ajaxUploadCounter.'");';
 						$uploadOptions['success'] .= '$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<p><img src=\"'.$this->request->webroot.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/"+responseJSON.filename+"\" border=0 /></p>");';
 					}
 					if(isset($uploadOptions['original_name'])){
 						$originalNameField= '\['.$model.'\]\["+position+"\]\['.$uploadOptions['original_name'].'\]';
 						$uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<input type=\"hidden\" name=\"data'.$originalNameField.'\" value=\""+responseJSON.original_filename+"\" />");';
 					}
+
+					$uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<div id=\"img-"+id+"\" class=\"alert alert-success\"></div>");';
+					$uploadOptions['success'] .='$("#img-"+id).html($(".qq-file-id-"+id).html());$(".qq-file-id-"+id).hide();';
 				$uploadOptions['success'] .='position++;}';
 			}else{
 				if(strlen($key)>0){
@@ -215,6 +217,7 @@ class BootstrapFormHelper extends FormHelper {
 						$originalNameField=str_replace($lastValue, $uploadOptions['original_name'], $campo);
 						$uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<input type=\"hidden\" name=\"data'.$originalNameField.'\" value=\""+responseJSON.original_filename+"\" />");';
 					}
+					// $uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<div id=\"img-0\"></div>");';
 					$uploadOptions['success'] .='}';
 				} else{
 					$uploadOptions['success'] = 'if(responseJSON.success){
@@ -225,6 +228,7 @@ class BootstrapFormHelper extends FormHelper {
 					if(isset($uploadOptions['original_name'])){
 						$uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<input type=\"hidden\" name=\"data['.$model.']['.$uploadOptions['original_name'].']\" value=\""+responseJSON.original_filename+"\" />");';
 					}
+					// $uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<div id=\"img-0\"></div>");';
 					$uploadOptions['success'] .='}';
 				}
 			}
@@ -245,7 +249,7 @@ class BootstrapFormHelper extends FormHelper {
 						if(isset($uploadOptions['original_name'])){
 							$htmlImageArea .= $this->input($model.'.'.$reqFieldKey.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
 							$htmlImageArea .= '<p>'.$this->value($model.'.'.$reqFieldKey.'.'.$uploadOptions['original_name']).'</p>';
-						}	
+						}
 					}
 				$key = $reqFieldKey+1;	
 				}	
@@ -559,6 +563,70 @@ $("#'.$jsId.'").fineUploader({
 		$options1['after'].=$this->input($fieldName2,$options2);
 		$this->counter++;
 		return $label.$this->input($fieldName1,$options1);
+	}
+	public function inputBrZipcode($fieldName, $options = array(),$ajaxOptions = array()){
+		$this->setEntity($fieldName);
+		$field_array = $this->entity();
+		$model = $field_array[0];
+		$field = array_pop($field_array);
+		$jsId = $this->domId($fieldName);
+
+		$ajaxOptions+=array(
+			'url'=>$this->request->here,
+			'streetField'=>$this->domId('rua'),
+			'numberField'=>$this->domId('numero'),
+			'districtField'=>$this->domId('bairro'),
+			'cityField'=>$this->domId('cidade'),
+			'stateField'=>$this->domId('estado'),
+			'callback'=>'updateField(data);'
+		);
+		echo $this->Html->scriptBlock('
+			var updateField = function(zipcodeJson){
+				if(zipcodeJson != null){
+					$("#'.$ajaxOptions['streetField'].'").val(zipcodeJson.Zipcode.logradouro);
+					$("#'.$ajaxOptions['districtField'].'").val(zipcodeJson.Zipcode.bairro);
+					$("#'.$ajaxOptions['cityField'].'").val(zipcodeJson.Zipcode.cidade);
+					$("#'.$ajaxOptions['stateField'].'").val(zipcodeJson.Zipcode.estado);
+					$("#zipcodeContainer").hide().removeClass("hidden").slideDown("fast");
+					$("#'.$ajaxOptions['numberField'].'").focus();	
+				} else {
+					$("#'.$ajaxOptions['streetField'].'").val("");
+					$("#'.$ajaxOptions['districtField'].'").val("");
+					$("#'.$ajaxOptions['cityField'].'").val("");
+					$("#'.$ajaxOptions['stateField'].'").val("");
+					$("#zipcodeContainer").hide().removeClass("hidden").slideDown("fast");
+					$("#'.$ajaxOptions['streetField'].'").focus();
+				}
+			}
+			$(function(){
+				var status=0;
+				$("#'.$jsId.'").keyup(function() {
+					var cep = $("#'.$jsId.'").val().replace(/\D/g,"");
+					if(cep.length<8){
+						status=0;
+					}
+					if(cep.length==8 && status==0){
+						status=1;
+			  			$.ajax({
+							beforeSend:function (XMLHttpRequest) {$("#zipcodeIndicator").hide().removeClass("hidden").show()}, 
+							complete:function (XMLHttpRequest, textStatus) {$("#zipcodeIndicator").hide();},
+							data:"data\['.$model.'\]\['.$field.'\]="+$("#'.$jsId.'").val()+"&data\[zipCodeComp\]=1", 
+							dataType:"html", 
+							success:function (data, textStatus){
+								if(data!="null"){
+									data = jQuery.parseJSON(data);
+								}else{
+									data = null
+								} '.$ajaxOptions['callback'].'}, 
+							type:"post", 
+							url:"'.$ajaxOptions['url'].'"
+						});
+					}
+				});
+			});
+		',array('inline'=>false)); 
+		$options['after']=$this->Html->image('/CakeUI/img/indicator.gif',array('id'=>'zipcodeIndicator','class'=>'hidden'));
+		return $this->input($fieldName,$options);
 	}
 }
 ?>
