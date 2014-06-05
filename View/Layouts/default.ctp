@@ -12,7 +12,7 @@
       echo $this->Html->meta('icon');
       echo $this->Html->css(array(
         '/CakeUI/css/bootstrap/bootstrap.min',
-        '/CakeUI/css/bootstrap/bootstrap-theme.min',
+        // '/CakeUI/css/bootstrap/bootstrap-theme.min',
         '/CakeUI/css/bootstrap/theme'
       ));
       echo $this->fetch('meta');
@@ -29,6 +29,12 @@
     <div class="container theme-showcase" role="main">
         <?php echo $this->Session->flash(); ?>
         <?php echo $this->fetch('content'); ?>
+        <?php echo $this->element('sql_dump'); ?>
+    </div>
+    <div class="modal fade modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-content"></div>
+      </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery.js"></script>

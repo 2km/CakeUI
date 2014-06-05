@@ -1,6 +1,6 @@
 <small><p>
 <?php
-	echo $this->Paginator->counter(array('format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')));
+	echo $this->Paginator->counter(array('format' => __d('cake_u_i', 'Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')));
 ?>
 </p></small>
 <ul class="pagination">

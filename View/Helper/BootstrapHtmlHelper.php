@@ -179,5 +179,28 @@ class BootstrapHtmlHelper extends HtmlHelper {
 		$html .= "</div>\n";
 		return $html;
 	}
+	public function newLink($title, $url = null, $options = array(), $confirmMessage = false){
+		$title='<span class="glyphicon glyphicon-plus"></span> '.$title;
+		$options['escape']=false;
+		if(!isset($options['class'])){$options['class']=null;}
+		$options['class'].=" btn btn-primary";
+		return $this->link($title,$url,$options,$confirmMessage);
+	}
+	public function viewLink($title, $url = null, $options = array(), $confirmMessage = false){
+		$title.=' <span class="glyphicon glyphicon-eye-open"></span>';
+		$options['escape']=false;
+		if(!isset($options['class'])){$options['class']=null;}
+		$options['class'].=" btn btn-xs btn-info modalButton";
+		$options['data-toggle']="modal";
+		$options['data-target']=".modalWindow";
+		return $this->link($title,$url,$options,$confirmMessage);
+	}
+	public function editLink($title, $url = null, $options = array(), $confirmMessage = false){
+		$title.=' <span class="glyphicon glyphicon-pencil"></span>';
+		$options['escape']=false;
+		if(!isset($options['class'])){$options['class']=null;}
+		$options['class'].=" btn btn-xs btn-warning";
+		return $this->link($title,$url,$options,$confirmMessage);
+	}
 }
 ?>

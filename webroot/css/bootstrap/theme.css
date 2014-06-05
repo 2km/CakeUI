@@ -142,7 +142,7 @@ div.checkboxInline input{
 	color:#FFF;
 }
 .topAlign{
-	margin-top: 26px;
+	margin-top: 25px;
 }
 .cakeui-tooltip {
     border-radius: 15px;
@@ -180,4 +180,7 @@ div.checkboxInline input{
     padding: 6px 12px;
     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
     width: 100%;
+}
+.col-label{
+	width: 25%;
 }

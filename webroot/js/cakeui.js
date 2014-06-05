@@ -20,8 +20,15 @@ $(function(){
 		});
 		return false;
 	});
-	 $(":input").inputmask();
-	 $('.cel-inputmask').keyup(function(){
+	$('#filter-button').click(function(){
+		if($('#form-search').is(":visible")){
+			$('#form-search').slideUp();
+		} else{
+			$('#form-search').slideDown();
+		}
+	});
+	$(":input").inputmask();
+	$('.cel-inputmask').keyup(function(){
 	 	v = $(this).val();
 	 	v = v.replace(/\D/g,"");
 	 	if(v.length<=10){
@@ -30,8 +37,9 @@ $(function(){
 	 		changeMask('.cel-inputmask','(99)9999[9]-9999');
 	 	}
 	 	return false;
-	 });
-	 $('.money-inputmask').maskMoney({thousands:'.', decimal:','});
+	});
+	$('.money-inputmask').maskMoney({thousands:'.', decimal:','});
+	$('#form-search').hide().removeClass("hidden");
 });
 function changeMask(field,maskToUse){
 	$(field).inputmask("remove");

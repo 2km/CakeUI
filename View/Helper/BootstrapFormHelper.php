@@ -72,7 +72,7 @@ class BootstrapFormHelper extends FormHelper {
 		//put placeholders
 		if(isset($currentModel->placeholder) && !isset($options['placeholder'])){
 			if(isset($currentModel->placeholder[$field])){
-				$options['placeholder']=$currentModel->placeholder[$field];
+				$options['placeholder']=__($currentModel->placeholder[$field]);
 			}
 		}
 		//put tooltips
@@ -82,10 +82,10 @@ class BootstrapFormHelper extends FormHelper {
 					$options['label']=false;
 				}
 				else if(!empty($options['label'])){
-					$options['label']= $options['label'].'<span class="btn btn-xs btn-link cakeui-tooltip" data-toggle="tooltip" data-placement="right" title="'.$currentModel->tooltips[$field].'">?</button>';
+					$options['label']= $options['label'].'<span class="btn btn-xs btn-link cakeui-tooltip" data-toggle="tooltip" data-placement="right" title="'.__($currentModel->tooltips[$field]).'">?</button>';
 				} else{
 					$label = __(Inflector::humanize(Inflector::underscore($field)));
-					$options['label']= $label.'<button type="button" class="btn btn-xs btn-link cakeui-tooltip" data-toggle="tooltip" data-placement="right" title="'.$currentModel->tooltips[$field].'">?</button>';
+					$options['label']= $label.'<button type="button" class="btn btn-xs btn-link cakeui-tooltip" data-toggle="tooltip" data-placement="right" title="'.__($currentModel->tooltips[$field]).'">?</button>';
 				}
 			}
 		}
@@ -113,6 +113,10 @@ class BootstrapFormHelper extends FormHelper {
 			$options['class']=null;
 			$options['between']='<div class="checkbox-container">';
 			$options['after']='</div>';
+		}
+		$options = $this->_parseOptions($options);
+		if($options['type']=='checkbox'){
+			$options['div']['class']='checkbox';
 		}
 		return parent::input($fieldName, $options);
 	}
@@ -164,6 +168,12 @@ class BootstrapFormHelper extends FormHelper {
 			echo $this->Html->scriptBlock($js,array('inline'=>false));
 		}
 		return $select_source;
+	}
+	public function checkbox($fieldName,$options = array()){
+		if($options['class']=='form-control'){
+			$options['class']=false;
+		}
+		return parent::checkbox($fieldName,$options);
 	}
 	public function ajaxUpload($fieldName, $uploadOptions = array()){
 		$jsId = $this->domId($fieldName);
@@ -627,6 +637,13 @@ $("#'.$jsId.'").fineUploader({
 		',array('inline'=>false)); 
 		$options['after']=$this->Html->image('/CakeUI/img/indicator.gif',array('id'=>'zipcodeIndicator','class'=>'hidden'));
 		return $this->input($fieldName,$options);
+	}
+	public function deleteLink($title, $url = null, $options = array(), $confirmMessage = false) {
+		$title.=' <span class="glyphicon glyphicon-trash"></span>';
+		$options['escape']=false;
+		if(!isset($options['class'])){$options['class']=null;}
+		$options['class'].=" btn btn-xs btn-danger";
+		return $this->postLink($title,$url,$options,$confirmMessage);
 	}
 }
 ?>
