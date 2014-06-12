@@ -46,7 +46,7 @@ foreach ($fields as $field) {
 }
 ?>
 	</table>
-
+<?php echo "<?php echo \$this->Html->editLink(__('Edit'), array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>";?>
 
 <?php
 if (!empty($associations['hasOne'])) :

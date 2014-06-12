@@ -101,7 +101,7 @@ if (!empty($actsAs)): ?>
 
 if (!empty($validate)):
 	echo "/**\n * Validation rules\n *\n * @var array\n */\n";
-	if($empty($plugin)){
+	if(!empty($plugin)){
 		echo "\tpublic \$validationDomain = '{$plugin}';\n";
 	} else {
 		echo "\tpublic \$validationDomain = 'model_i18n';\n";	

@@ -1,5 +1,5 @@
 body {
-	padding-top: 50px;
+/*	padding-top: 50px;*/
 	padding-bottom: 30px;
 }
 .theme-dropdown .dropdown-menu {
@@ -36,6 +36,9 @@ div.actions{
 	border:1px solid #CCCCCC;
 	overflow:auto;
 	margin-bottom: 10px;
+}
+.checkbox > label{
+	margin-left: 5px;
 }
 div.checkboxInline fieldset {
 	margin:0;
@@ -183,4 +186,17 @@ div.checkboxInline input{
 }
 .col-label{
 	width: 25%;
+}
+.navbar-header .glyphicon-align-justify{
+	font-size: 28px;
+	margin-top: 10px;
+}
+#login-box .alert{
+	margin-left: 0;
+}
+#login-box .header {
+    background: none repeat scroll 0 0 #3C8DBC;
+}
+#login-box .btn:hover,#login-box .btn:focus{
+	color: #FFF;
 }
