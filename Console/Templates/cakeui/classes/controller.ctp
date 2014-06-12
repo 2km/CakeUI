@@ -38,6 +38,7 @@ if (!$isScaffold) {
  */
 class <?php echo $controllerName; ?>Controller extends <?php echo $plugin; ?>AppController {
 
+	private $urlActiveItem = '<?php echo (!empty($admin))?'/'.$admin:''; ?>/<?php echo strtolower($controllerName); ?>';
 <?php if ($isScaffold): ?>
 /**
  * Scaffold
@@ -45,8 +46,6 @@ class <?php echo $controllerName; ?>Controller extends <?php echo $plugin; ?>App
  * @var mixed
  */
 	public $scaffold;
-
-	private $urlActiveItem = '<?php echo (!empty($admin))?'/'.$admin:''; ?>/<?php echo strtolower($controllerName); ?>';
 
 <?php else:
 
