@@ -16,7 +16,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 ?>
-<div class="panel panel-default page-header <?php echo $pluralVar; ?> form">
+<div class="panel panel-default topAlign <?php echo $pluralVar; ?> form">
 	<div class="panel-heading">
 		<h3 class="panel-title">
 	<?php 

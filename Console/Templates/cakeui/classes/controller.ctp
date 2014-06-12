@@ -46,6 +46,8 @@ class <?php echo $controllerName; ?>Controller extends <?php echo $plugin; ?>App
  */
 	public $scaffold;
 
+	private $urlActiveItem = '<?php echo (!empty($admin))?'/'.$admin:''; ?>/<?php echo strtolower($controllerName); ?>';
+
 <?php else:
 
 	if (count($helpers)):

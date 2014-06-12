@@ -26,6 +26,7 @@
 		$this-><?php echo $currentModelName ?>->recursive = 0;
 		//$this->Prg->commonProcess();
 		//$this->Paginator->settings['conditions'] = $this-><?php echo $currentModelName ?>->parseCriteria($this->passedArgs);
+		$this->set('urlActiveItem',$this->urlActiveItem);
 		$this->set('<?php echo $pluralName ?>', $this->Paginator->paginate());
 <?php
 	foreach (array('belongsTo', 'hasAndBelongsToMany') as $assoc):
@@ -107,6 +108,7 @@
 		echo "\t\t\$this->set(compact(".join(', ', $compact)."));\n";
 	endif;
 ?>
+		$this->set('urlActiveItem',$this->urlActiveItem);
 	}
 
 <?php $compact = array(); ?>
@@ -163,6 +165,7 @@
 			echo "\t\t\$this->set(compact(".join(', ', $compact)."));\n";
 		endif;
 	?>
+		$this->set('urlActiveItem',$this->urlActiveItem);
 	}
 
 /**
