@@ -45,3 +45,21 @@ function changeMask(field,maskToUse){
 	$(field).inputmask("remove");
 	$(field).inputmask({"mask":maskToUse});
 }
+function cakeUIDeleteRow(element,tableId){
+	$("#"+element).remove();
+	if($("#"+tableId+" tbody tr").size()==0){
+		$("#"+tableId).remove();
+	}
+}
+function cakeUIEditRow(element,urlEdit){
+	$.ajax({
+      data:$("#"+element).closest("form").serialize(), 
+      dataType:"html", 
+      success:function (data, textStatus) {
+        $("#modal-content").html(data);
+        $(".modalWindow").modal("show");
+      }, 
+      type:"post", 
+      url:urlEdit
+    });
+}

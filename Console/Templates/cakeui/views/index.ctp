@@ -27,7 +27,7 @@ $singularHumanName = isset($info['singular']) ? $info['singular'] : $singularHum
 			if(empty($artigo)):
 				echo "<?php echo \$this->Html->newLink(__('New " . $singularHumanName . "'), array('action'=>'add')); ?>";
 			else:
-				echo "<?php echo \$this->Html->link(__('Nov".$artigo ." " .$singularHumanName . "'), array('action' => 'add'),array('class'=>'btn btn-primary')); ?>";
+				echo "<?php echo \$this->Html->newLink(__('Nov".$artigo ." " .$singularHumanName . "'), array('action' => 'add'),array('class'=>'btn btn-primary')); ?>";
 			endif;
 			?></li>
 			<li><?php 

@@ -582,7 +582,6 @@ $("#'.$jsId.'").fineUploader({
 		$jsId = $this->domId($fieldName);
 
 		$ajaxOptions+=array(
-			'url'=>$this->request->here,
 			'streetField'=>$this->domId('rua'),
 			'numberField'=>$this->domId('numero'),
 			'districtField'=>$this->domId('bairro'),
@@ -593,10 +592,10 @@ $("#'.$jsId.'").fineUploader({
 		echo $this->Html->scriptBlock('
 			var updateField = function(zipcodeJson){
 				if(zipcodeJson != null){
-					$("#'.$ajaxOptions['streetField'].'").val(zipcodeJson.Zipcode.logradouro);
-					$("#'.$ajaxOptions['districtField'].'").val(zipcodeJson.Zipcode.bairro);
-					$("#'.$ajaxOptions['cityField'].'").val(zipcodeJson.Zipcode.cidade);
-					$("#'.$ajaxOptions['stateField'].'").val(zipcodeJson.Zipcode.estado);
+					$("#'.$ajaxOptions['streetField'].'").val(zipcodeJson.logradouro);
+					$("#'.$ajaxOptions['districtField'].'").val(zipcodeJson.bairro);
+					$("#'.$ajaxOptions['cityField'].'").val(zipcodeJson.localidade);
+					$("#'.$ajaxOptions['stateField'].'").val(zipcodeJson.uf);
 					$("#zipcodeContainer").hide().removeClass("hidden").slideDown("fast");
 					$("#'.$ajaxOptions['numberField'].'").focus();	
 				} else {
@@ -620,7 +619,6 @@ $("#'.$jsId.'").fineUploader({
 			  			$.ajax({
 							beforeSend:function (XMLHttpRequest) {$("#zipcodeIndicator").hide().removeClass("hidden").show()}, 
 							complete:function (XMLHttpRequest, textStatus) {$("#zipcodeIndicator").hide();},
-							data:"data\['.$model.'\]\['.$field.'\]="+$("#'.$jsId.'").val()+"&data\[zipCodeComp\]=1", 
 							dataType:"html", 
 							success:function (data, textStatus){
 								if(data!="null"){
@@ -628,8 +626,8 @@ $("#'.$jsId.'").fineUploader({
 								}else{
 									data = null
 								} '.$ajaxOptions['callback'].'}, 
-							type:"post", 
-							url:"'.$ajaxOptions['url'].'"
+							type:"get", 
+							url: "http://cep.correiocontrol.com.br/"+cep+".json"
 						});
 					}
 				});
@@ -644,6 +642,80 @@ $("#'.$jsId.'").fineUploader({
 		if(!isset($options['class'])){$options['class']=null;}
 		$options['class'].=" btn btn-xs btn-danger";
 		return $this->postLink($title,$url,$options,$confirmMessage);
+	}
+	public function childAddForm($label,$options = array()){
+		App::uses('String', 'Utility');
+		$options+=array(
+			'model'=>null,
+			'element'=>'CakeUI./Elements/modal_form',
+			'return_element'=>'CakeUI./Elements/modal_success',
+			'table_id'=>"CakeUI".$options["model"]."-".$this->counter,
+			'table'=>null,
+			'key'=>0
+		);
+		$html = null;
+		$cookie_name = md5(json_encode($options['table']));
+		if(!isset($_COOKIE[$cookie_name])){
+			setcookie($cookie_name, json_encode($options));
+		}
+		$html .= $this->Html->newLink($label,array(
+			'action'=>$this->action,
+			'CakeUIOperation'=>1,
+			'CakeUICookie'=>$cookie_name,
+			String::toList($this->request->params['pass'],',')),array('class'=>'modalButton','data-toggle'=>'modal','data-target'=>'.modalWindow'));
+		$html .= "<div id='table-".$this->counter."' class='topAlign'>";
+		if (isset($this->request->data[$options['model']]) && count($this->request->data[$options['model']])) {
+			$html .= $this->tableCreate($options,$cookie_name);
+		}
+		$html .= "</div>";
+		$this->counter++;
+		return $html;
+	}
+	private function tableCreate($options,$cookie_name){
+		App::uses('String', 'Utility');
+		$html = null;
+		$html .= "<table class='table' id='"."CakeUI".$options["model"].'-'.$this->counter."'><thead><tr>";
+		foreach($options['table'] as $key=>$table){
+			$html .= "<th>".$table['label']."</th>";
+		}
+		$html .= "<th class='actions'>".__("Actions")."</th>";
+		$html .= "</tr></thead><tbody>";
+		foreach ($this->request->data[$options['model']] as $key => $fields) {
+			$formFields = null;
+			foreach ($fields as $name => $value) {
+				if($name=='created'||$name=='modified'){
+					continue;
+				}
+				$formFields .= $this->input($options["model"].".".$key.".".$name,array('value'=>$value,'type'=>'hidden'));
+			}
+			$formFields .=$this->input('CakeUITemp.'.$key.'.key',array('type'=>'hidden','value'=>$key));
+			$html .= "<tr id='row-".$key."'>";
+			foreach($options['table'] as $k=>$table){
+				if(isset($this->request->data[$options['model']][$key])){
+					$html .= "<td>".$fields[$table['field']]."</td>";
+					$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,'CakeUIRowId'=>$key,String::toList($this->request->params['pass'],',')));
+					if(empty($fields['id'])){
+						$html .=
+							"<td class='actions'>".
+								$formFields.
+								$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$key.'","'.$options['table_id'].'")'))." ".
+								$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
+							"</td>";	
+					} else{
+						$html .=
+							"<td class='actions'>".
+								$formFields.
+								$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cookie_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+								$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
+							"</td>";	
+					}
+				}
+			}
+			$html .= "</tr>";
+		}
+		$html .= "</tbody></table>";
+		echo $this->Js->writeBuffer(array('inline'=>false));
+		return $html;
 	}
 }
 ?>

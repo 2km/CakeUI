@@ -191,7 +191,7 @@ div.checkboxInline input{
 	font-size: 28px;
 	margin-top: 10px;
 }
-#login-box .alert{
+#login-box .alert, .modalForm .alert{
 	margin-left: 0;
 }
 #login-box .header {
