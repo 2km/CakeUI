@@ -10,7 +10,7 @@
 App::uses('FormHelper', 'View/Helper');
 
 class BootstrapFormHelper extends FormHelper {
-	
+
 	public $helpers = array('Html', 'Js'=>array('Jquery'));
 	private $once = array();
 	private $counter = 0;
@@ -120,13 +120,13 @@ class BootstrapFormHelper extends FormHelper {
 		}
 		return parent::input($fieldName, $options);
 	}
-	
+
 	public function inlineForm($model,$fieldName,$buttonName,$options){
 		if(!isset($options['Button'])){$options['Button']=null;}
 		if(!isset($options['Field'])){$options['Field']=null;}
 		if(!isset($options['Form'])){$options['Form']=null;}
 
-		$defaultConfig['Field']['label']=false;		
+		$defaultConfig['Field']['label']=false;
 		$defaultConfig['Button']['place']='after';
 		$defaultConfig['Button']['class']='btn btn-default';
 		$defaultConfig['Form']=null;
@@ -142,9 +142,9 @@ class BootstrapFormHelper extends FormHelper {
 		}
 		$button = '<span class="input-group-btn">'.$this->button($buttonName,$buttonOptions).'</span>';
 		if($buttonOptions['place']=='after'){
-			$fieldOptions['after']=$button;	
+			$fieldOptions['after']=$button;
 		} else{
-			$fieldOptions['before']=$button;	
+			$fieldOptions['before']=$button;
 		}
 
 		$html = $this->create($model,$formOptions);
@@ -162,9 +162,9 @@ class BootstrapFormHelper extends FormHelper {
 			if(empty($this->once['/CakeUI/css/select2-3.4.8/select2.css']) && empty($this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css'])){
 				$this->once['/CakeUI/css/select2-3.4.8/select2.css']=true;
 				$this->once['/CakeUI/css/select2-3.4.8/select2-bootstrap.css']=true;
-				echo $this->Html->css(array('/CakeUI/css/select2-3.4.8/select2.css','/CakeUI/css/select2-3.4.8/select2-bootstrap.css'),null,array('inline'=>false));	
+				echo $this->Html->css(array('/CakeUI/css/select2-3.4.8/select2.css','/CakeUI/css/select2-3.4.8/select2-bootstrap.css'),null,array('inline'=>false));
 			}
-			
+
 			echo $this->Html->scriptBlock($js,array('inline'=>false));
 		}
 		return $select_source;
@@ -182,7 +182,7 @@ class BootstrapFormHelper extends FormHelper {
 		$model = $field_array[0];
 		$field = array_pop($field_array);
 		$key = null;
-		
+
 		if(isset($field_array[1]) && is_numeric($field_array[1])){
 			$key = $field_array[1];
 		}
@@ -222,7 +222,7 @@ class BootstrapFormHelper extends FormHelper {
 					if($uploadOptions['displayFile']==true){
 						$uploadOptions['success'] .= '$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<p><img src=\"'.$this->request->webroot.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/"+responseJSON.filename+"\" border=0 /></p>");';
 					}
-						
+
 					if(isset($uploadOptions['original_name'])){
 						$originalNameField=str_replace($lastValue, $uploadOptions['original_name'], $campo);
 						$uploadOptions['success'] .='$("#'.$jsId.'-'.$this->ajaxUploadCounter.'").append("<input type=\"hidden\" name=\"data'.$originalNameField.'\" value=\""+responseJSON.original_filename+"\" />");';
@@ -261,8 +261,8 @@ class BootstrapFormHelper extends FormHelper {
 							$htmlImageArea .= '<p>'.$this->value($model.'.'.$reqFieldKey.'.'.$uploadOptions['original_name']).'</p>';
 						}
 					}
-				$key = $reqFieldKey+1;	
-				}	
+				$key = $reqFieldKey+1;
+				}
 			}
 		}else{
 			if(strlen($key)>0){
@@ -286,9 +286,9 @@ class BootstrapFormHelper extends FormHelper {
 					$htmlImageArea .= $this->input($model.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
 					$htmlImageArea .= '<p>'.$this->value($model.'.'.$uploadOptions['original_name']).'</p>';
 				}
-			}	
+			}
 		}
-		
+
 		$htmlImageArea .= '</div>';
 		$html='
 <div id="'.$jsId.'"></div>
@@ -341,8 +341,8 @@ $("#'.$jsId.'").fineUploader({
 		fail: "alert alert-error"
 	},
 	validation: {
-	  allowedExtensions: ['.$uploadOptions['fileType'].'], 
-	  sizeLimit: '.$uploadOptions['size'].', 
+	  allowedExtensions: ['.$uploadOptions['fileType'].'],
+	  sizeLimit: '.$uploadOptions['size'].',
 	},
 	showMessage: function(message) {
 		$("#restricted-fine-uploader").append("<div class=\"alert alert-danger\">" + message + "</div>");
@@ -354,15 +354,15 @@ $("#'.$jsId.'").fineUploader({
 	}
 });';
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		$css = '/CakeUI/css/fineuploader/fineuploader.css';
 		echo $this->Html->script('/CakeUI/js/fineuploader/all.fineuploader',array('inline'=>false));
 		if(!isset($this->once[$css])){
 			$this->once[$css]=true;
-			echo $this->Html->css($css,null,array('inline'=>false));	
+			echo $this->Html->css($css,null,array('inline'=>false));
 		}
-		
-		echo $this->Html->scriptBlock($js,array('inline'=>false));		
+
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		$this->ajaxUploadCounter++;
 
 		return $html;
@@ -386,7 +386,7 @@ $("#'.$jsId.'").fineUploader({
 
 		echo $this->Html->script('/CakeUI/js/jqCharCounter/jquery.jqEasyCharCounter.min.js',array('inline'=>false));
 		$js = '$("#'.$jsId.'").jqEasyCounter('.$json_options.');';
-		echo $this->Html->scriptBlock($js,array('inline'=>false));		
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		$options['type']='textarea';
 		return $this->input($fieldName,$options);
 	}
@@ -399,20 +399,20 @@ $("#'.$jsId.'").fineUploader({
 		$field = array_pop($field_array);
 
 		$html = null;
-		
+
 		if(isset($options['label'])){
-			$html=$this->label($fieldName,$options['label']);	
+			$html=$this->label($fieldName,$options['label']);
 		} else{
-			$html=$this->label($fieldName,$label = __(Inflector::humanize(Inflector::underscore($field))));	
-		}	
-	
+			$html=$this->label($fieldName,$label = __(Inflector::humanize(Inflector::underscore($field))));
+		}
+
 		$html .= '<div id="star-'.$jsId.'" class="starRating"></div>';
 		if ($this->isFieldError($fieldName)) {
     		$html .= '<div class="has-error has-feedback"><span class="help-block">'.$this->error($fieldName,array('div'=>true)).'</span></div>';
 		}
-		
+
 		echo $this->Html->script('/CakeUI/js/raty/jquery.raty.min.js',array('inline'=>false));
-		
+
 		$readonly = $score = null;
 		if($this->value($fieldName)){
 			$score = 'score: '.$this->value($fieldName);
@@ -463,7 +463,7 @@ $("#'.$jsId.'").fineUploader({
 		});';
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		if(!isset($options['rows'])){
-			$options['rows']=5;	
+			$options['rows']=5;
 		}
 		if(!isset($options['cols'])){
 			$options['cols']=48;
@@ -482,14 +482,14 @@ $("#'.$jsId.'").fineUploader({
 		);
 		$scripts[] = '/CakeUI/js/bootstrap-datepicker/bootstrap-datepicker';
 		if($jsOptions['locale']!==false){
-			$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];	
+			$scripts[] ='/CakeUI/js/bootstrap-datepicker/locales/bootstrap-datepicker.'.$jsOptions['locale'];
 		}
-		
+
 		echo $this->Html->script($scripts,array('inline'=>false));
 		$css = '/CakeUI/css/bootstrap-datepicker/datepicker3';
 		if(!isset($this->once[$css])){
 			$this->once[$css]=true;
-			echo $this->Html->css($css,null,array('inline'=>false));	
+			echo $this->Html->css($css,null,array('inline'=>false));
 		}
 
 		$js = '$("#'.$jsId.'").datepicker({
@@ -552,7 +552,7 @@ $("#'.$jsId.'").fineUploader({
 		$css = '/CakeUI/css/bootstrap-datepicker/datepicker3';
 		if(!isset($this->once[$css])){
 			$this->once[$css]=true;
-			echo $this->Html->css($css,null,array('inline'=>false));	
+			echo $this->Html->css($css,null,array('inline'=>false));
 		}
 
 		$js = '$("#datepicker-'.$this->counter.'").datepicker({
@@ -568,7 +568,7 @@ $("#'.$jsId.'").fineUploader({
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		if (!isset($options['type'])) {
 			$options['type']='text';
-		}	
+		}
 		$options1['after']='<span class="input-group-addon">'.$jsOptions['rangeLabel'].'</span>';
 		$options1['after'].=$this->input($fieldName2,$options2);
 		$this->counter++;
@@ -597,7 +597,7 @@ $("#'.$jsId.'").fineUploader({
 					$("#'.$ajaxOptions['cityField'].'").val(zipcodeJson.localidade);
 					$("#'.$ajaxOptions['stateField'].'").val(zipcodeJson.uf);
 					$("#zipcodeContainer").hide().removeClass("hidden").slideDown("fast");
-					$("#'.$ajaxOptions['numberField'].'").focus();	
+					$("#'.$ajaxOptions['numberField'].'").focus();
 				} else {
 					$("#'.$ajaxOptions['streetField'].'").val("");
 					$("#'.$ajaxOptions['districtField'].'").val("");
@@ -617,22 +617,22 @@ $("#'.$jsId.'").fineUploader({
 					if(cep.length==8 && status==0){
 						status=1;
 			  			$.ajax({
-							beforeSend:function (XMLHttpRequest) {$("#zipcodeIndicator").hide().removeClass("hidden").show()}, 
+							beforeSend:function (XMLHttpRequest) {$("#zipcodeIndicator").hide().removeClass("hidden").show()},
 							complete:function (XMLHttpRequest, textStatus) {$("#zipcodeIndicator").hide();},
-							dataType:"html", 
+							dataType:"html",
 							success:function (data, textStatus){
 								if(data!="null"){
 									data = jQuery.parseJSON(data);
 								}else{
 									data = null
-								} '.$ajaxOptions['callback'].'}, 
-							type:"get", 
+								} '.$ajaxOptions['callback'].'},
+							type:"get",
 							url: "http://cep.correiocontrol.com.br/"+cep+".json"
 						});
 					}
 				});
 			});
-		',array('inline'=>false)); 
+		',array('inline'=>false));
 		$options['after']=$this->Html->image('/CakeUI/img/indicator.gif',array('id'=>'zipcodeIndicator','class'=>'hidden'));
 		return $this->input($fieldName,$options);
 	}
@@ -663,7 +663,7 @@ $("#'.$jsId.'").fineUploader({
 			'CakeUIOperation'=>1,
 			'CakeUICookie'=>$cookie_name,
 			String::toList($this->request->params['pass'],',')),array('class'=>'modalButton','data-toggle'=>'modal','data-target'=>'.modalWindow'));
-		$html .= "<div id='table-".$this->counter."' class='topAlign'>";
+		$html .= "<div id='table-".$this->counter."' class='topAlign' style='overflow:auto'>";
 		if (isset($this->request->data[$options['model']]) && count($this->request->data[$options['model']])) {
 			$html .= $this->tableCreate($options,$cookie_name);
 		}
@@ -693,23 +693,24 @@ $("#'.$jsId.'").fineUploader({
 			foreach($options['table'] as $k=>$table){
 				if(isset($this->request->data[$options['model']][$key])){
 					$html .= "<td>".$fields[$table['field']]."</td>";
-					$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,'CakeUIRowId'=>$key,String::toList($this->request->params['pass'],',')));
-					if(empty($fields['id'])){
-						$html .=
-							"<td class='actions'>".
-								$formFields.
-								$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$key.'","'.$options['table_id'].'")'))." ".
-								$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
-							"</td>";	
-					} else{
-						$html .=
-							"<td class='actions'>".
-								$formFields.
-								$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cookie_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
-								$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
-							"</td>";	
-					}
+
 				}
+			}
+			$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,'CakeUIRowId'=>$key,String::toList($this->request->params['pass'],',')));
+			if(empty($fields['id'])){
+				$html .=
+					"<td class='actions'>".
+						$formFields.
+						$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$key.'","'.$options['table_id'].'")'))." ".
+						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
+					"</td>";
+			} else{
+				$html .=
+					"<td class='actions'>".
+						$formFields.
+						$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cookie_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
+					"</td>";
 			}
 			$html .= "</tr>";
 		}
