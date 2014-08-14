@@ -692,8 +692,11 @@ $("#'.$jsId.'").fineUploader({
 			$html .= "<tr id='row-".$key."'>";
 			foreach($options['table'] as $k=>$table){
 				if(isset($this->request->data[$options['model']][$key])){
-					$html .= "<td>".$fields[$table['field']]."</td>";
-
+					if(isset($options['table'][$k]['form']['options'])){
+						$html .= "<td>".$options['table'][$k]['form']['options'][$fields[$table['field']]]."</td>";
+					} else{
+						$html .= "<td>".$fields[$table['field']]."</td>";
+					}
 				}
 			}
 			$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,'CakeUIRowId'=>$key,String::toList($this->request->params['pass'],',')));

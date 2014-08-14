@@ -7,12 +7,12 @@ class childFormComponent extends Component {
 	public $settings = null;
 
 	public $components = array('Session','Cookie');
-	
+
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		$this->settings = $settings;
 	    parent::__construct($collection, $settings);
-	}	
-	public function initialize(Controller $controller) { 
+	}
+	public function initialize(Controller $controller) {
 		if(!empty($controller->uses[0])){
 			$this->model = ClassRegistry::init($controller->uses[0]);
 		}else{
@@ -64,5 +64,11 @@ CakeUIOperation = 3 delete
 			throw new NotFoundException(__('Item inválido 2'));
 		}
 	}
+    public function shutdown(Controller $controller){
+        if(isset($controller->request->params['named']['CakeUICookie'])){
+            unset($_COOKIE[$controller->request->params['named']['CakeUICookie']]);
+            setcookie($controller->request->params['named']['CakeUICookie'], "", time()-3600);
+        }
+    }
 }
 ?>
