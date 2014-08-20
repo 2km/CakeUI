@@ -102,9 +102,17 @@ class BootstrapFormHelper extends FormHelper {
 			}
 		}
 		if($this->isFieldError($fieldName)){
-			if(!isset($options['div']['class'])){$options['div']['class']=null;}
+			if (is_array($options['div'])) {
+				if(!isset($options['div']['class'])){
+					$options['div']['class'] = ' has-error has-feedback';
+				} else {
+					$options['div']['class'] .= ' has-error has-feedback';
+				}
+			} else {
+				$options['div'] .=' has-error has-feedback';
+			}
+			
 			if(!isset($options['after'])){$options['after']=null;}
-			$options['div']['class'].=' has-error has-feedback';
 			if($temp_options['type']=='text' || $temp_options['type']=='password' || $temp_options['type']=='email'){
 				$options['after'].='<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
 			}
