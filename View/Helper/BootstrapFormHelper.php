@@ -589,6 +589,10 @@ $("#'.$jsId.'").fineUploader({
 			'stateField'=>$this->domId('estado'),
 			'callback'=>'updateField(data);'
 		);
+		$js = null;
+		if(isset($this->request->data[$model][$field])){
+			$js = '$("#zipcodeContainer").hide().removeClass("hidden").slideDown("fast");';
+		}
 		echo $this->Html->scriptBlock('
 			var updateField = function(zipcodeJson){
 				if(zipcodeJson != null){
@@ -631,6 +635,7 @@ $("#'.$jsId.'").fineUploader({
 						});
 					}
 				});
+			'.$js.'
 			});
 		',array('inline'=>false));
 		$options['after']=$this->Html->image('/CakeUI/img/indicator.gif',array('id'=>'zipcodeIndicator','class'=>'hidden'));

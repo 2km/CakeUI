@@ -32,9 +32,9 @@ $(function(){
 	 	v = $(this).val();
 	 	v = v.replace(/\D/g,"");
 	 	if(v.length<=10){
-	 		changeMask('.cel-inputmask','(99)9999-9999[9]');
+	 		changeMask(this,'(99)9999-9999[9]');
 	 	} else{
-	 		changeMask('.cel-inputmask','(99)9999[9]-9999');
+	 		changeMask(this,'(99)9999[9]-9999');
 	 	}
 	 	return false;
 	});
@@ -53,13 +53,13 @@ function cakeUIDeleteRow(element,tableId){
 }
 function cakeUIEditRow(element,urlEdit){
 	$.ajax({
-      data:$("#"+element).closest("form").serialize(), 
-      dataType:"html", 
+      data:$("#"+element).closest("form").serialize(),
+      dataType:"html",
       success:function (data, textStatus) {
         $("#modal-content").html(data);
         $(".modalWindow").modal("show");
-      }, 
-      type:"post", 
+      },
+      type:"post",
       url:urlEdit
     });
 }
