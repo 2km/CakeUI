@@ -205,7 +205,8 @@ class BootstrapFormHelper extends FormHelper {
 			'label'=>Inflector::humanize($field),
 			'url'=>$this->request->here,
 			'class'=>'btn btn-default',
-			'displayFile'=>true
+			'displayFile'=>true,
+			'editPath'=>false
 		);
 //-----------------------------------------------------js script for success callback---------------------------------------------------
 		if(!isset($uploadOptions['success'])){
