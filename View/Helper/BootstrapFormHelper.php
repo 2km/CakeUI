@@ -111,7 +111,7 @@ class BootstrapFormHelper extends FormHelper {
 			} else {
 				$options['div'] .=' has-error has-feedback';
 			}
-			
+
 			if(!isset($options['after'])){$options['after']=null;}
 			if($temp_options['type']=='text' || $temp_options['type']=='password' || $temp_options['type']=='email'){
 				$options['after'].='<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
@@ -262,7 +262,11 @@ class BootstrapFormHelper extends FormHelper {
 						$htmlImageArea .= $this->input($model.'.'.$reqFieldKey.'.'.$field,array('type'=>'hidden')).
 							$this->input($model.'.'.$reqFieldKey.'.id',array('type'=>'hidden'));
 						if(!empty($reqField[$field]) && $uploadOptions['displayFile']==true){
-							$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$reqField[$field]).'</p>';
+							if($uploadOptions['editPath']!==false){
+								$htmlImageArea .= '<p>'.$this->Html->image($uploadOptions['editPath'].'/'.$reqField[$field]).'</p>';
+							} else {
+								$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$reqField[$field]).'</p>';
+							}
 						}
 						if(isset($uploadOptions['original_name'])){
 							$htmlImageArea .= $this->input($model.'.'.$reqFieldKey.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
@@ -278,7 +282,12 @@ class BootstrapFormHelper extends FormHelper {
 					$htmlImageArea .= $this->input($fieldName,array('type'=>'hidden')).
 						$this->input($model.'.'.$key.'.id',array('type'=>'hidden'));
 					if(!empty($this->request->data[$model][$key][$field]) && $uploadOptions['displayFile']==true){
-						$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$this->request->data[$model][$key][$field]).'</p>';
+						if($uploadOptions['editPath']!==false){
+							$htmlImageArea .= '<p>'.$this->Html->image($uploadOptions['editPath'].'/'.$this->request->data[$model][$key][$field]).'</p>';
+						} else{
+							$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$this->request->data[$model][$key][$field]).'</p>';
+						}
+
 					}
 					if(isset($uploadOptions['original_name'])){
 						$htmlImageArea .= $this->input($model.'.'.$key.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
@@ -288,7 +297,11 @@ class BootstrapFormHelper extends FormHelper {
 			} else {
 				$htmlImageArea .= $this->input($model.'.'.$field,array('type'=>'hidden'));
 				if(!empty($this->request->data[$model][$field]) && $uploadOptions['displayFile']==true){
-					$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$this->request->data[$model][$field]).'</p>';
+					if($uploadOptions['editPath']!==false){
+						$htmlImageArea .= '<p>'.$this->Html->image($uploadOptions['editPath'].'/'.$this->request->data[$model][$field]).'</p>';
+					} else {
+						$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$this->request->data[$model][$field]).'</p>';
+					}
 				}
 				if(isset($uploadOptions['original_name'])){
 					$htmlImageArea .= $this->input($model.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
