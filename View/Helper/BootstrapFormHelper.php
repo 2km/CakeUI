@@ -90,14 +90,14 @@ class BootstrapFormHelper extends FormHelper {
 			}
 		}
 		//put mask
-		if(isset($this->_models[$this->defaultModel]->mask) && !isset($mask['data-inputmask'])){
-			if(isset($this->_models[$this->defaultModel]->mask[$field])){
-				if(is_array($this->_models[$this->defaultModel]->mask[$field])){
+		if(isset($currentModel->mask) && !isset($mask['data-inputmask'])){
+			if(isset($currentModel->mask[$field])){
+				if(is_array($currentModel->mask[$field])){
 					if(!isset($options['class'])){$options['class']=null;}
-					$options['class'].='form-control '.$this->_models[$this->defaultModel]->mask[$field]['class'];
+					$options['class'].='form-control '.$currentModel->mask[$field]['class'];
 				}
 				else{
-					$options['data-inputmask']=$this->_models[$this->defaultModel]->mask[$field];
+					$options['data-inputmask']=$currentModel->mask[$field];
 				}
 			}
 		}
