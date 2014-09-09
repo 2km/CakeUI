@@ -102,15 +102,20 @@ class BootstrapFormHelper extends FormHelper {
 			}
 		}
 		if($this->isFieldError($fieldName)){
-			if (is_array($options['div'])) {
-				if(!isset($options['div']['class'])){
-					$options['div']['class'] = ' has-error has-feedback';
+			if(isset($options['div'])){
+				if (is_array($options['div'])) {
+					if(!isset($options['div']['class'])){
+						$options['div']['class'] = ' has-error has-feedback';
+					} else {
+						$options['div']['class'] .= ' has-error has-feedback';
+					}
 				} else {
-					$options['div']['class'] .= ' has-error has-feedback';
+					$options['div'] .=' has-error has-feedback';
 				}
-			} else {
-				$options['div'] .=' has-error has-feedback';
+			} else{
+				$options['div']['class'] = ' has-error has-feedback';
 			}
+
 
 			if(!isset($options['after'])){$options['after']=null;}
 			if($temp_options['type']=='text' || $temp_options['type']=='password' || $temp_options['type']=='email'){
