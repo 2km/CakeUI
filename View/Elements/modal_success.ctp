@@ -1,11 +1,11 @@
-<?php 
+<?php
 App::uses('String', 'Utility');
 function returnTableHtml($requestData,$options){
 	if($requestData['CakeUITemp']['key']==0 ){ //&& não ta sendo editado
 		$html="<table class='table' id='".$options['table_id']."'>";
 		$html.=returnHeaderHtml($options);
 		$html.='<tbody>';
-		$html.='</tbody>';	
+		$html.='</tbody>';
 		$html.='</table>';
 		return $html;
 	}
@@ -14,7 +14,10 @@ function returnHeaderHtml($options){
 	$tableHeader="<thead>";
 	$tableHeader.="<tr>";
 	foreach($options['table'] as $key=>$value){
-		$tableHeader.= "<th>".$value['label']."</th>";
+		$value['display'] = isset($value['display'])?$value['display']:true;
+		if($value['display']){
+			$tableHeader.= "<th>".$value['label']."</th>";
+		}
 	}
 	$tableHeader.="<th class='actions'>".__("Actions")."</th>";
 	$tableHeader.="</tr>";
@@ -23,12 +26,10 @@ function returnHeaderHtml($options){
 }
 $row_td='';
 foreach($options['table'] as $key=>$field){
-	if(!isset($field['display'])){
-		$field['display']=true;
-	}
+	$field['display'] = isset($field['display'])?$field['display']:true;
 	if(isset($field['display']) && $field['display']==true){
 		if(isset($field['form']['options']) && is_array($field['form']['options'])){
-			$row_td .= "<td>".$field['form']['options'][$requestData[$options['model']][$field['field']]]."</td>";	
+			$row_td .= "<td>".$field['form']['options'][$requestData[$options['model']][$field['field']]]."</td>";
 		}else{
 			$row_td .= "<td>".addslashes($requestData[$options['model']][$field['field']])."</td>";
 		}
@@ -40,22 +41,22 @@ foreach($requestData[$options['model']] as $field=>$value){
 }
 $editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cakeUICookie,'CakeUIRowId'=>$requestData['CakeUITemp']['key'],String::toList($this->request->params['pass'],',')));
 if(!empty($requestData[$options['model']]['id'])){ //Actions will be in database
-	$row_td .= 
+	$row_td .=
 		"<td class='actions'>".
 			addslashes($formFields).
 			addslashes($this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cakeUICookie,'CakeUIRecordId'=>$requestData[$options['model']]['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$requestData['CakeUITemp']['key'].'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?'))))." ".
 			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'")'))).
 		"</td>";
 } else { //Actions will be only in window
-	$row_td .= 
+	$row_td .=
 		"<td class='actions'>".
 			addslashes($formFields).
 			addslashes($this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$options['table_id'].'")')))." ".
 			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'")'))).
 		"</td>";
 }
-	
-echo $this->Session->flash('modalMsg'); 
+
+echo $this->Session->flash('modalMsg');
 list($name,$number) = explode('-',$options['table_id']);
 $divElement = "#table-".$number;
 $table = returnTableHtml($requestData,$options);
@@ -104,7 +105,7 @@ die();
 $formFields = null;
 $formCounter = 0;
 list($containerName,$idContainer) = explode("-",$modalData["dkmModalId"]);
-$tabelaId = $options['table_id']; 
+$tabelaId = $options['table_id'];
 foreach($table['field'] as $field=>$options){
 	if(!isset($options['display'])){
 		$options['display']=true;
@@ -122,22 +123,22 @@ foreach($table['field'] as $field=>$options){
 		if(isset($options['label'])){
 			$label = $options['label'];
 		}
-		
+
 		if($customForm == 'select2Basic'){
 			$tableRow .= str_replace("\n","",addslashes("<td>".$this->DkmForm->{$customForm}($modalData["dkmModel"].".".$position.".".$field,array('value'=>$dataToSave[$field],'label'=>false,'options'=>$opts), true)."</td>"));
-			$script .= '$("#'.Inflector::camelize($modalData["dkmModel"]).$position.Inflector::camelize($field).'").select2();';	
+			$script .= '$("#'.Inflector::camelize($modalData["dkmModel"]).$position.Inflector::camelize($field).'").select2();';
 		}
 		else if($customForm == 'datePicker'){
 			$tableRow .= str_replace("\n","",addslashes("<td>".$this->DkmForm->{$customForm}($modalData["dkmModel"].".".$position.".".$field,array('value'=>$dataToSave[$field],'label'=>false), true)."</td>"));
-			$script .= '$("#'.Inflector::camelize($modalData["dkmModel"]).$position.Inflector::camelize($field).'").datepicker({dateFormat: "dd/mm/yy",});';	
+			$script .= '$("#'.Inflector::camelize($modalData["dkmModel"]).$position.Inflector::camelize($field).'").datepicker({dateFormat: "dd/mm/yy",});';
 		}
 		else if($customForm == 'dateTimePicker'){
-			$tableRow .= str_replace("\n","",addslashes("<td>".$this->DkmForm->{$customForm}($modalData["dkmModel"].".".$position.".".$field,array('value'=>$dataToSave[$field],'label'=>false), $otherOptions, true)."</td>"));	
-			$script .= '$("#'.Inflector::camelize($modalData["dkmModel"]).$position.Inflector::camelize($field).'").dateTimePicker({dateFormat: "dd/mm/yy",});';	
+			$tableRow .= str_replace("\n","",addslashes("<td>".$this->DkmForm->{$customForm}($modalData["dkmModel"].".".$position.".".$field,array('value'=>$dataToSave[$field],'label'=>false), $otherOptions, true)."</td>"));
+			$script .= '$("#'.Inflector::camelize($modalData["dkmModel"]).$position.Inflector::camelize($field).'").dateTimePicker({dateFormat: "dd/mm/yy",});';
 		}
 		else if($customForm == 'wysiwyg'){
 			$tableRow .= str_replace("\n","",addslashes("<td>".$this->DkmForm->{$customForm}($modalData["dkmModel"].".".$position.".".$field,array('value'=>$dataToSave[$field],'label'=>false), true)."</td>"));
-			$script .= '$(".wysiwyg").wysiwyg({initialContent:""});';	
+			$script .= '$(".wysiwyg").wysiwyg({initialContent:""});';
 		}
 		else if($customForm == 'ajaxUpload'){
 			$tableRow .= str_replace("\n","",addslashes("<td>".$this->DkmForm->{$customForm}($modalData["dkmModel"].".".$position.".".$field,array('value'=>$dataToSave[$field],'resizedPath'=>$options['resizedPath']), true)."</td>"));
@@ -149,7 +150,7 @@ foreach($table['field'] as $field=>$options){
 	}else{
 		if(isset($options['display']) && $options['display']==true){
 			if(isset($options['options']) && is_array($options['options'])){
-				$tableRow .= "<td>".$options['options'][$dataToSave[$field]]."</td>";	
+				$tableRow .= "<td>".$options['options'][$dataToSave[$field]]."</td>";
 			}else{
 				$tableRow .= "<td>".addslashes($dataToSave[$field])."</td>";
 			}
@@ -176,7 +177,7 @@ if(!empty($dataToSave['id'])){
 		"</td>";
 	$tableRow .="</tr>";
 }
-//$tabelaId = "DKM".$modalData["dkmModel"]; 
+//$tabelaId = "DKM".$modalData["dkmModel"];
 if(isset($modalData["dkmEditLink"]) && $modalData["dkmEditLink"]){
 	$js='
 	row = "'.$tableRow.'";

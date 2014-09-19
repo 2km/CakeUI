@@ -708,7 +708,10 @@ $("#'.$jsId.'").fineUploader({
 		$html = null;
 		$html .= "<table class='table' id='"."CakeUI".$options["model"].'-'.$this->counter."'><thead><tr>";
 		foreach($options['table'] as $key=>$table){
-			$html .= "<th>".$table['label']."</th>";
+			$table['display'] = isset($table['display'])?$table['display']:true;
+			if($table['display']){
+				$html .= "<th>".$table['label']."</th>";
+			}
 		}
 		$html .= "<th class='actions'>".__("Actions")."</th>";
 		$html .= "</tr></thead><tbody>";
@@ -723,11 +726,14 @@ $("#'.$jsId.'").fineUploader({
 			$formFields .=$this->input('CakeUITemp.'.$key.'.key',array('type'=>'hidden','value'=>$key));
 			$html .= "<tr id='row-".$key."'>";
 			foreach($options['table'] as $k=>$table){
-				if(isset($this->request->data[$options['model']][$key])){
-					if(isset($options['table'][$k]['form']['options'])){
-						$html .= "<td>".$options['table'][$k]['form']['options'][$fields[$table['field']]]."</td>";
-					} else{
-						$html .= "<td>".$fields[$table['field']]."</td>";
+				$table['display'] = isset($table['display'])?$table['display']:true;
+				if($table['display']){
+					if(isset($this->request->data[$options['model']][$key])){
+						if(isset($options['table'][$k]['form']['options'])){
+							$html .= "<td>".$options['table'][$k]['form']['options'][$fields[$table['field']]]."</td>";
+						} else{
+							$html .= "<td>".$fields[$table['field']]."</td>";
+						}
 					}
 				}
 			}
