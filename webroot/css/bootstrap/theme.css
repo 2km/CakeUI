@@ -9,7 +9,7 @@ body {
 }
 .theme-showcase > p > .btn {
 	margin: 5px 0;
-} 
+}
 .table {
     margin-bottom: 0;
 }
@@ -61,9 +61,9 @@ div.checkboxInline input{
 	margin-top:-20px;
 }
 
-.dropdown-menu>li{	
+.dropdown-menu>li{
 	position:relative;
-	-webkit-user-select: none; /* Chrome/Safari */        
+	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
 	/* Rules below not implemented in browsers yet */
@@ -82,7 +82,7 @@ div.checkboxInline input{
 	border-left-color:#fff;
 	box-shadow:none;
 }
-.right-caret:after,.left-caret:after{	
+.right-caret:after,.left-caret:after{
 	content:"";
     border-bottom: 5px solid transparent;
     border-top: 5px solid transparent;
@@ -92,10 +92,10 @@ div.checkboxInline input{
     width: 0;
 	margin-left:5px;
 }
-.right-caret:after{	
+.right-caret:after{
 	border-left: 5px solid #585858;
 }
-.left-caret:after{	
+.left-caret:after{
 	border-right: 5px solid #585858;
 }
 .navbar-left{
@@ -163,9 +163,9 @@ div.checkboxInline input{
   font-family: 'Glyphicons Halflings';
 
   src: url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.eot');
-  src: url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), 
-  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.woff') format('woff'), 
-  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), 
+  src: url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.woff') format('woff'),
+  url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'),
   url('../../../CakeUI/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 .checkbox-container {
@@ -199,4 +199,7 @@ div.checkboxInline input{
 }
 #login-box .btn:hover,#login-box .btn:focus{
 	color: #FFF;
+}
+.no-label{
+    top:0px !important;
 }

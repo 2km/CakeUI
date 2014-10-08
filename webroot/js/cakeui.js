@@ -51,13 +51,13 @@ function cakeUIDeleteRow(element,tableId){
 		$("#"+tableId).remove();
 	}
 }
-function cakeUIEditRow(element,urlEdit){
+function cakeUIEditRow(element,urlEdit,model){
 	$.ajax({
       data:$("#"+element).closest("form").serialize(),
       dataType:"html",
       success:function (data, textStatus) {
-        $("#modal-content").html(data);
-        $(".modalWindow").modal("show");
+        $("."+model+"-modal-content").html(data);
+        $("."+model+"-modal-content").parents(".modalWindow:first").modal("show");
       },
       type:"post",
       url:urlEdit

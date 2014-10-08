@@ -119,7 +119,11 @@ class BootstrapFormHelper extends FormHelper {
 
 			if(!isset($options['after'])){$options['after']=null;}
 			if($temp_options['type']=='text' || $temp_options['type']=='password' || $temp_options['type']=='email'){
-				$options['after'].='<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
+				if($temp_options['label']==false){
+					$options['after'].='<span class="glyphicon glyphicon-remove form-control-feedback no-label"></span>';
+				}else{
+					$options['after'].='<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
+				}
 			}
 		}
 		if(isset($options['multiple']) && $options['multiple']==='checkbox'){
@@ -690,16 +694,24 @@ $("#'.$jsId.'").fineUploader({
 		if(!isset($_COOKIE[$cookie_name])){
 			setcookie($cookie_name, json_encode($options));
 		}
-		$html .= $this->Html->newLink($label,array(
-			'action'=>$this->action,
-			'CakeUIOperation'=>1,
-			'CakeUICookie'=>$cookie_name,
-			String::toList($this->request->params['pass'],',')),array('class'=>'modalButton','data-toggle'=>'modal','data-target'=>'.modalWindow'));
+		$html .='<div id="modal-'.$this->counter.'" class="modal fade modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content '.$options['model'].'-modal-content" id="modal-content"></div>
+            </div>
+        </div>';
+        $url = array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,String::toList($this->request->params['pass'],','));
+		$html .= $this->Html->newLink($label,'#',
+			array('data-remote'=>$this->Html->url($url), 'data-toggle'=>'modal','data-target'=>'#modal-'.$this->counter)
+		);
 		$html .= "<div id='table-".$this->counter."' class='topAlign' style='overflow:auto'>";
 		if (isset($this->request->data[$options['model']]) && count($this->request->data[$options['model']])) {
 			$html .= $this->tableCreate($options,$cookie_name);
 		}
 		$html .= "</div>";
+		echo $this->Html->scriptBlock('
+			$("#modal-'.$this->counter.'").on("hide.bs.modal", function(e) {
+				$(this).removeData("bs.modal");
+			});',array('inline'=>false));
 		$this->counter++;
 		return $html;
 	}
@@ -721,7 +733,25 @@ $("#'.$jsId.'").fineUploader({
 				if($name=='created'||$name=='modified'){
 					continue;
 				}
-				$formFields .= $this->input($options["model"].".".$key.".".$name,array('value'=>$value,'type'=>'hidden'));
+				if(is_array($value)){
+					if(!in_array($name,$options['extra_model'])){
+						foreach ($value as $keyTemp => $valueTemp) {
+							$formFields .= $this->input($options["model"].".".$key.".".$name.".",array('value'=>$valueTemp['id'],'type'=>'hidden'));
+						}
+					} else{
+						foreach ($value as $keyTemp => $valueTemp) {
+							foreach($valueTemp as $extraModelKey=>$extraModelValue){
+								if($extraModelKey=='created' || $extraModelKey=='modified'){
+									continue;
+								}
+								$formFields .= $this->input($options["model"].".".$key.".".$name.".".$keyTemp.".".$extraModelKey,array('value'=>$extraModelValue,'type'=>'hidden'));
+							}
+
+						}
+					}
+				}else{
+					$formFields .= $this->input($options["model"].".".$key.".".$name,array('value'=>$value,'type'=>'hidden'));
+				}
 			}
 			$formFields .=$this->input('CakeUITemp.'.$key.'.key',array('type'=>'hidden','value'=>$key));
 			$html .= "<tr id='row-".$key."'>";
@@ -743,14 +773,14 @@ $("#'.$jsId.'").fineUploader({
 					"<td class='actions'>".
 						$formFields.
 						$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$key.'","'.$options['table_id'].'")'))." ".
-						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
+						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'")')).
 					"</td>";
 			} else{
 				$html .=
 					"<td class='actions'>".
 						$formFields.
 						$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cookie_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
-						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'")')).
+						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'")')).
 					"</td>";
 			}
 			$html .= "</tr>";
@@ -758,6 +788,113 @@ $("#'.$jsId.'").fineUploader({
 		$html .= "</tbody></table>";
 		echo $this->Js->writeBuffer(array('inline'=>false));
 		return $html;
+	}
+	public function addItem($label,$model,$fields){
+		$html = $this->Html->newLink($label,'#',array('id'=>'addItem-'.$this->counter));
+		$div_id = $model.'-'.$this->counter;
+		$html .='<div id="'.$div_id.'" class="table-responsive">';
+		if (isset($this->request->data[$model]) && count($this->request->data[$model])) {
+			$html .=$this->addItemTableCreate($model,$fields);
+		}
+		$html .='</div>';
+		$this->addItemJs($model,$div_id,$fields);
+		echo $this->Js->writeBuffer(array('inline'=>false));
+		$this->counter++;
+		return $html;
+	}
+	private function addItemTableCreate($model,$fields){
+		App::uses('Inflector', 'Utility');
+		$html = null;
+		$table_id = "CakeUI".$model.'-'.$this->counter;
+		$html .= "<table class='table' id='".$table_id."'><thead><tr>";
+		foreach($fields as $fieldName=>$options){
+			$html .= "<th>".$options['form']['label']."</th>";
+		}
+		$html .= "<th class='actions'>".__("Actions")."</th>";
+		$html .= "</tr></thead><tbody>";
+		foreach ($this->request->data[$model] as $key => $req_values) {
+			$html .= "<tr id='".$model."-row-".$key."'>";
+			foreach($req_values as $fieldName=>$fieldValue){
+				if(isset($fields[$fieldName])){
+					$fields[$fieldName]['form']['label']=false;
+					$html .= "<td>".$this->input($model.".".$key.".".$fieldName,$fields[$fieldName]['form'])."</td>";
+				} else{
+					$html .=$this->input($model.".".$key.".".$fieldName,array('type'=>'hidden'));
+				}
+			}
+			if(empty($req_values['id'])){
+				$html .=
+					"<td class='actions'>".
+						$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-danger', 'onclick'=>'cakeUIDeleteRow("'.$model.'-row-'.$key.'","'.$table_id.'")'))." ".
+					"</td>";
+			} else{
+				$html .=
+					"<td class='actions'>".
+						// $this->Js->link("Delete",array('action'=>$this->action,'CakeUIModel'=>$model,'CakeUIRecord'=>$req_values['id']),array('success' => 'cakeUIDeleteRow("'.'row-'.$key.'","'.$table_id.'")','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+					$this->Js->link("Delete",array('controller'=>Inflector::pluralize($model),'action'=>'delete',$req_values['id']),array('success' => '$("#'.$model.'-row-'.$key.'").remove();if($("#'.$table_id.' tbody tr").size()==0){$("#'.$table_id.'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+					"</td>";
+			}
+			$html .= "</tr>";
+		}
+		$html .= "</tbody></table>";
+		return $html;
+	}
+	private function addItemJs($model,$div_id,$fields){
+		App::uses('Inflector', 'Utility');
+		$table_id = "CakeUI".$model.'-'.$this->counter;
+		$table_html="<table class='table' id='".$table_id."'>";
+		$table_html.="<thead>";
+		$table_html.="<tr>";
+		foreach($fields as $key=>$value){
+				$table_html.= "<th>".$value['form']['label']."</th>";
+		}
+		$table_html.="<th class='actions'>".__("Actions")."</th>";
+		$table_html.="</tr>";
+		$table_html.="</thead>";
+		$table_html.='<tbody>';
+		$table_html.='</tbody>';
+		$table_html.='</table>';
+
+		$fieldJs=$completeTd='';
+		foreach ($fields as $field => $options) {
+			$options['form']['label']=false;
+			$completeTd.='<td>'.$this->input($model.'.CakeUITempPosition.'.$field,$options['form']).'</td>';
+			if(isset($options['js_callback'])){
+				$fieldName = $model.'CakeUITempPosition'.Inflector::camelize($field);
+				$fieldJs .= str_replace('fieldToChange', $fieldName, $options['js_callback']);
+			}
+		}
+		$completeTd .="<td class='actions'>".
+						$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-danger', 'onclick'=>'$(this).parents("tr:first").remove();if($("#'.$table_id.' tbody tr").size()==0){$("#'.$table_id.'").remove();}'))." ".
+					"</td>";
+		$completeTd = str_replace("\n","",addslashes($completeTd));
+
+
+		$js = '$("#addItem-'.$this->counter.'").click(function(){
+					var position = 0;
+					if($("#'.$div_id.' table").size()==0){
+						$("#'.$div_id.'").append("'.$table_html.'");
+						tr = "<tr id=\"'.$model.'-row-0\"></tr>"
+						$("#'.$table_id.' tbody").append(tr);
+						completeTd = "'.$completeTd.'";
+						completeTd = completeTd.replace(/CakeUITempPosition/g,position);
+						$("#'.$table_id.' #'.$model.'-row-0").append(completeTd);
+					} else{
+						row = $("#'.$table_id.' tr:last").attr("id");
+						vals = row.split("-");
+						position = (parseInt(vals[1])+1)
+						new_id = "'.$model.'-row-"+position;
+						tr = "<tr id=\""+new_id+"\"></tr>"
+						$("#'.$table_id.' tbody").append(tr);
+						completeTd = "'.$completeTd.'";
+						completeTd = completeTd.replace(/CakeUITempPosition/g,position);
+						$("#'.$table_id.' #"+new_id).append(completeTd);
+					}
+					fieldToChange = "'.$fieldJs.'";
+					fieldToChange = fieldToChange.replace(/CakeUITempPosition/g,position);
+					eval(fieldToChange);
+				});';
+		echo $this->Html->scriptBlock($js,array('inline'=>false));
 	}
 }
 ?>

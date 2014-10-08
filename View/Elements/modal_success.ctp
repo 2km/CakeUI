@@ -31,13 +31,28 @@ foreach($options['table'] as $key=>$field){
 		if(isset($field['form']['options']) && is_array($field['form']['options'])){
 			$row_td .= "<td>".$field['form']['options'][$requestData[$options['model']][$field['field']]]."</td>";
 		}else{
-			$row_td .= "<td>".addslashes($requestData[$options['model']][$field['field']])."</td>";
+			$row_td .= "<td>".$requestData[$options['model']][$field['field']]."</td>";
 		}
 	}
 }
 $formFields = null;
 foreach($requestData[$options['model']] as $field=>$value){
-	$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$field,array('value'=>$value,'type'=>'hidden'));
+	if(is_array($value)){
+		foreach ($value as $keyTemp => $valueTemp) {
+			$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$field.".",array('value'=>$valueTemp,'type'=>'hidden'));
+		}
+	}else{
+		$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$field,array('value'=>$value,'type'=>'hidden'));
+	}
+}
+if(isset($options['extra_model'])){
+	foreach($options['extra_model'] as $k=>$extraModel){
+		foreach($requestData[$extraModel] as $reqKey=>$reqValue){
+			foreach($reqValue as $extraK=>$extraValue){
+				$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$extraModel.'.'.$reqKey.'.'.$extraK,array('value'=>$extraValue,'type'=>'hidden'));
+			}
+		}
+	}
 }
 $editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cakeUICookie,'CakeUIRowId'=>$requestData['CakeUITemp']['key'],String::toList($this->request->params['pass'],',')));
 if(!empty($requestData[$options['model']]['id'])){ //Actions will be in database
@@ -45,14 +60,14 @@ if(!empty($requestData[$options['model']]['id'])){ //Actions will be in database
 		"<td class='actions'>".
 			addslashes($formFields).
 			addslashes($this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cakeUICookie,'CakeUIRecordId'=>$requestData[$options['model']]['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$requestData['CakeUITemp']['key'].'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?'))))." ".
-			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'")'))).
+			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'")'))).
 		"</td>";
 } else { //Actions will be only in window
 	$row_td .=
 		"<td class='actions'>".
 			addslashes($formFields).
 			addslashes($this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$options['table_id'].'")')))." ".
-			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'")'))).
+			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'")'))).
 		"</td>";
 }
 
@@ -62,7 +77,7 @@ $divElement = "#table-".$number;
 $table = returnTableHtml($requestData,$options);
 // $row = returnHtmlRow($requestData,$options);
 $completeTr = "<tr id='row-".$requestData['CakeUITemp']['key']."'>".$row_td."</tr>";
-$js = '
+$js = '$(document).ready(function(){
 if($("'.$divElement.' table").size()==0){
 	$("'.$divElement.'").append("'.$table.'");
 	$("#'.$options['table_id'].' tbody").append("'.$completeTr.'");
@@ -73,7 +88,11 @@ if($("'.$divElement.' table").size()==0){
 		$("#row-'.$requestData['CakeUITemp']['key'].'").html("'.$row_td.'");
 	}
 }
-$(".modalWindow").modal("hide");
+$(".'.$options['model'].'-modal-content").parents(".modalWindow:first").modal("hide");
+$("body").removeClass("modal-open");
+$(".modal-backdrop").remove();
+});
+
 ';
 echo $this->Html->scriptBlock($js);
 echo $this->Js->writeBuffer();

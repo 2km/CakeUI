@@ -44,7 +44,7 @@ CakeUIOperation = 3 delete
 		} else if($controller->request->params['named']['CakeUIOperation'] == 2){ //Add or update
     		$controller->set(compact('options'));
     		$controller->set("cakeUICookie",$controller->request->params['named']["CakeUICookie"]);
-			if ($this->model->{$model}->saveAll($controller->request->data[$model],array('validate'=>'only'))) {
+			if ($this->model->{$model}->saveAll($controller->request->data,array('validate'=>'only'))) {
 				$controller->set('requestData',$controller->request->data);
 			    echo $controller->render($options["return_element"]);
 			} else {

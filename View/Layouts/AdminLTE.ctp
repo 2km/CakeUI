@@ -36,8 +36,8 @@
                 <!-- Main content -->
                 <section class="content">
                         <!-- /.row -->
-                        <?php 
-                          echo $this->Session->flash(); 
+                        <?php
+                          echo $this->Session->flash();
                           echo $this->Session->flash('auth',array('element'=>'Dkmadmin.authError'));
                           echo $this->fetch('content');
                         ?>
@@ -70,12 +70,12 @@
           }
         });
         </script>
-        
-        <div class="modal fade modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+        <!-- <div class="modal fade modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content" id="modal-content"></div>
             </div>
-        </div>
-       
+        </div> -->
+
     </body>
 </html>
