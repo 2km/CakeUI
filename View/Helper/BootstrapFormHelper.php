@@ -882,7 +882,7 @@ $("#'.$jsId.'").fineUploader({
 					} else{
 						row = $("#'.$table_id.' tr:last").attr("id");
 						vals = row.split("-");
-						position = (parseInt(vals[1])+1)
+						position = (parseInt(vals[2])+1)
 						new_id = "'.$model.'-row-"+position;
 						tr = "<tr id=\""+new_id+"\"></tr>"
 						$("#'.$table_id.' tbody").append(tr);
