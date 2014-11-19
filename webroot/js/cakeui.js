@@ -51,9 +51,9 @@ function cakeUIDeleteRow(element,tableId){
 		$("#"+tableId).remove();
 	}
 }
-function cakeUIEditRow(element,urlEdit,model){
+function cakeUIEditRow(element,urlEdit,model,localStorageName){
 	$.ajax({
-      data:$("#"+element).closest("form").serialize(),
+      data:$("#"+element).closest("form").serialize()+"&"+$.param(JSON.parse(localStorage.getItem(localStorageName))),
       dataType:"html",
       success:function (data, textStatus) {
         $("."+model+"-modal-content").html(data);

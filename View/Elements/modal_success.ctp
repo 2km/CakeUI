@@ -54,20 +54,20 @@ if(isset($options['extra_model'])){
 		}
 	}
 }
-$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cakeUICookie,'CakeUIRowId'=>$requestData['CakeUITemp']['key'],String::toList($this->request->params['pass'],',')));
+$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUILocalStorageName'=>$CakeUILocalStorageName,'CakeUIRowId'=>$requestData['CakeUITemp']['key'],String::toList($this->request->params['pass'],',')));
 if(!empty($requestData[$options['model']]['id'])){ //Actions will be in database
 	$row_td .=
 		"<td class='actions'>".
 			addslashes($formFields).
-			addslashes($this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cakeUICookie,'CakeUIRecordId'=>$requestData[$options['model']]['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$requestData['CakeUITemp']['key'].'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?'))))." ".
-			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'")'))).
+			addslashes($this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUILocalStorageName'=>$CakeUILocalStorageName,'CakeUIRecordId'=>$requestData[$options['model']]['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$requestData['CakeUITemp']['key'].'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?'))))." ".
+			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'","'.$CakeUILocalStorageName.'")'))).
 		"</td>";
 } else { //Actions will be only in window
 	$row_td .=
 		"<td class='actions'>".
 			addslashes($formFields).
 			addslashes($this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$options['table_id'].'")')))." ".
-			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'")'))).
+			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'","'.$CakeUILocalStorageName.'")'))).
 		"</td>";
 }
 

@@ -690,32 +690,40 @@ $("#'.$jsId.'").fineUploader({
 			'key'=>0
 		);
 		$html = null;
-		$cookie_name = md5(json_encode($options['table']));
-		if(!isset($_COOKIE[$cookie_name])){
-			setcookie($cookie_name, json_encode($options));
-		}
+		$localStorageName = $options['model'].'-'.$this->counter;
 		$html .='<div id="modal-'.$this->counter.'" class="modal fade modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content '.$options['model'].'-modal-content" id="modal-content"></div>
             </div>
         </div>';
-        $url = array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,String::toList($this->request->params['pass'],','));
-		$html .= $this->Html->newLink($label,'#',
-			array('data-remote'=>$this->Html->url($url), 'data-toggle'=>'modal','data-target'=>'#modal-'.$this->counter)
+        $url = array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUILocalStorageName'=>$localStorageName, String::toList($this->request->params['pass'],','));
+		$html .= $this->Html->newLink($label,'#',array('id'=>'modalButton-'.$this->counter)
+			//array('data-remote'=>$this->Html->url($url), 'data-toggle'=>'modal','data-target'=>'#modal-'.$this->counter)
 		);
 		$html .= "<div id='table-".$this->counter."' class='topAlign' style='overflow:auto'>";
 		if (isset($this->request->data[$options['model']]) && count($this->request->data[$options['model']])) {
-			$html .= $this->tableCreate($options,$cookie_name);
+			$html .= $this->tableCreate($options,$localStorageName);
 		}
 		$html .= "</div>";
+		$request = $this->Js->request($url,
+            array(
+                // 'update'=>'#LogisticaItemContratoId',
+                'method'=>'post',
+                'success'=>'$("#modal-'.$this->counter.' .modal-content").html(data);$("#modal-'.$this->counter.'").modal("show")',
+                'dataExpression' => true,
+                // 'data'=> $this->Js->serializeForm(array('isForm' => false, 'inline' => true))
+                'data'=>'JSON.parse(localStorage.getItem("'.$localStorageName.'"))'
+        ));
 		echo $this->Html->scriptBlock('
-			$("#modal-'.$this->counter.'").on("hide.bs.modal", function(e) {
-				$(this).removeData("bs.modal");
-			});',array('inline'=>false));
+			localStorage.setItem("'.$localStorageName.'", JSON.stringify('.json_encode(array('CakeUILocalStorage'=>$options)).'));
+			$("#modalButton-'.$this->counter.'").click(function(e){
+				'.$request.'
+			});
+		',array('inline'=>false));
 		$this->counter++;
 		return $html;
 	}
-	private function tableCreate($options,$cookie_name){
+	private function tableCreate($options,$local_storage_name){
 		App::uses('String', 'Utility');
 		$html = null;
 		$html .= "<table class='table' id='"."CakeUI".$options["model"].'-'.$this->counter."'><thead><tr>";
@@ -767,20 +775,20 @@ $("#'.$jsId.'").fineUploader({
 					}
 				}
 			}
-			$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUICookie'=>$cookie_name,'CakeUIRowId'=>$key,String::toList($this->request->params['pass'],',')));
+			$editUrl = $this->Html->url(array('action'=>$this->action,'CakeUIOperation'=>1,'CakeUILocalStorageName'=>$local_storage_name,'CakeUIRowId'=>$key,String::toList($this->request->params['pass'],',')));
 			if(empty($fields['id'])){
 				$html .=
 					"<td class='actions'>".
 						$formFields.
 						$this->Html->link(__("Delete"),"#",array('class'=>'btn btn-xs btn-danger', 'onclick'=>'cakeUIDeleteRow("'.'row-'.$key.'","'.$options['table_id'].'")'))." ".
-						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'")')).
+						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'","'.$local_storage_name.'")')).
 					"</td>";
 			} else{
 				$html .=
 					"<td class='actions'>".
 						$formFields.
-						$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUICookie'=>$cookie_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
-						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'")')).
+						$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUILocalStorageName'=>$local_storage_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'","'.$local_storage_name.'")')).
 					"</td>";
 			}
 			$html .= "</tr>";
@@ -808,7 +816,11 @@ $("#'.$jsId.'").fineUploader({
 		$table_id = "CakeUI".$model.'-'.$this->counter;
 		$html .= "<table class='table' id='".$table_id."'><thead><tr>";
 		foreach($fields as $fieldName=>$options){
-			$html .= "<th>".$options['form']['label']."</th>";
+			if(isset($value['form']['label'])){
+				$html .= "<th>".$options['form']['label']."</th>";
+			} else{
+				$html.= "<th width='0'></th>";
+			}
 		}
 		$html .= "<th class='actions'>".__("Actions")."</th>";
 		$html .= "</tr></thead><tbody>";
@@ -846,7 +858,11 @@ $("#'.$jsId.'").fineUploader({
 		$table_html.="<thead>";
 		$table_html.="<tr>";
 		foreach($fields as $key=>$value){
+			if(isset($value['form']['label'])){
 				$table_html.= "<th>".$value['form']['label']."</th>";
+			} else{
+				$table_html.= "<th width='0'></th>";
+			}
 		}
 		$table_html.="<th class='actions'>".__("Actions")."</th>";
 		$table_html.="</tr>";
