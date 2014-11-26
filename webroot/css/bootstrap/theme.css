@@ -203,3 +203,7 @@ div.checkboxInline input{
 .no-label{
     top:0px !important;
 }
+.dataOverflow{
+    overflow-y:hidden;
+    overflow-x:auto;
+}
