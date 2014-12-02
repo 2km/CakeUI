@@ -15,7 +15,7 @@ function returnHeaderHtml($options){
 	$tableHeader.="<tr>";
 	foreach($options['table'] as $key=>$value){
 		$value['display'] = isset($value['display'])?$value['display']:true;
-		if($value['display']){
+		if($value['display']===true){
 			$tableHeader.= "<th>".$value['label']."</th>";
 		}
 	}
@@ -27,7 +27,7 @@ function returnHeaderHtml($options){
 $row_td='';
 foreach($options['table'] as $key=>$field){
 	$field['display'] = isset($field['display'])?$field['display']:true;
-	if(isset($field['display']) && $field['display']==true){
+	if($field['display']===true){
 		if(isset($field['form']['options']) && is_array($field['form']['options'])){
 			$row_td .= "<td>".$field['form']['options'][$requestData[$options['model']][$field['field']]]."</td>";
 		}else{
