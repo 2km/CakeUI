@@ -402,20 +402,30 @@ $("#'.$jsId.'").fineUploader({
 		$jsId = $this->domId($fieldName);
 		$options += array(
 			'maxChars'=>200,
-			'maxCharsWarning'=>180
+			'maxCharsWarning'=>180,
+			'msgFontSize'=> '12px',
+			'msgFontColor'=> '#000000',
+			'msgFontFamily'=> 'Arial',
+			'msgTextAlign'=> 'right',
+			'msgWarningColor'=> '#F00',
+			'msgAppendMethod'=> 'insertAfter',
+			'msgTextBefore'=> 'Characters: ',
+			'msgTextAfter'=> '',
+			'textConnector'=>'/'
 		);
-		$json_options = '{';
-		if(isset($options['maxChars'])){
-			$json_options .="'maxChars':".$options['maxChars'].",";
-			unset($options['maxChars']);
-		}
-		if(isset($options['maxCharsWarning'])){
-			$json_options .="'maxCharsWarning':".$options['maxCharsWarning'].",";
-			unset($options['maxCharsWarning']);
-		}
-		$json_options .= '}';
+		$json_options = json_encode($options);
+		// $json_options = '{';
+		// if(isset($options['maxChars'])){
+		// 	$json_options .="'maxChars':".$options['maxChars'].",";
+		// 	unset($options['maxChars']);
+		// }
+		// if(isset($options['maxCharsWarning'])){
+		// 	$json_options .="'maxCharsWarning':".$options['maxCharsWarning'].",";
+		// 	unset($options['maxCharsWarning']);
+		// }
+		// $json_options .= '}';
 
-		echo $this->Html->script('/CakeUI/js/jqCharCounter/jquery.jqEasyCharCounter.min.js',array('inline'=>false));
+		echo $this->Html->script('/CakeUI/js/jqCharCounter/jquery.jqEasyCharCounter.js',array('inline'=>false));
 		$js = '$("#'.$jsId.'").jqEasyCounter('.$json_options.');';
 		echo $this->Html->scriptBlock($js,array('inline'=>false));
 		$options['type']='textarea';

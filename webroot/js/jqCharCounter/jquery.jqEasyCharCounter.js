@@ -27,11 +27,14 @@ $.fn.extend({
 					msgFontFamily: 'Arial',
 					msgTextAlign: 'right',
 					msgWarningColor: '#F00',
-					msgAppendMethod: 'insertAfter'
+					msgAppendMethod: 'insertAfter',
+					msgTextBefore: 'Characters: ',
+					msgTextAfter: '',
+					textConnector: '/'
                 }, givenOptions);
-	
+
 			if(options.maxChars <= 0) return;
-			
+
 			// create counter element
 			var jqEasyCounterMsg = $("<div class=\"jqEasyCounterMsg\">&nbsp;</div>");
 			var jqEasyCounterMsgStyle = {
@@ -45,35 +48,35 @@ $.fn.extend({
 			jqEasyCounterMsg.css(jqEasyCounterMsgStyle);
 			// append counter element to DOM
 			jqEasyCounterMsg[options.msgAppendMethod]($this);
-			
+
 			// bind events to this element
 			$this
 				.bind('keydown keyup keypress', doCount)
 				.bind('focus paste', function(){setTimeout(doCount, 10);})
 				.bind('blur', function(){jqEasyCounterMsg.stop().fadeTo( 'fast', 0);return false;});
-			
+
 			function doCount(){
 				var val = $this.val(),
 					length = val.length
-				
+
 				if(length >= options.maxChars) {
-					val = val.substring(0, options.maxChars); 				
+					val = val.substring(0, options.maxChars);
 				};
-				
+
 				if(length > options.maxChars){
 					// keep scroll bar position
 					var originalScrollTopPosition = $this.scrollTop();
 					$this.val(val.substring(0, options.maxChars));
 					$this.scrollTop(originalScrollTopPosition);
 				};
-				
+
 				if(length >= options.maxCharsWarning){
 					jqEasyCounterMsg.css({"color" : options.msgWarningColor});
 				}else {
 					jqEasyCounterMsg.css({"color" : options.msgFontColor});
 				};
-				
-				jqEasyCounterMsg.html('Characters: ' + $this.val().length + "/" + options.maxChars);
+
+				jqEasyCounterMsg.html(options.msgTextBefore + $this.val().length + options.textConnector + options.maxChars + options.msgTextAfter);
                 jqEasyCounterMsg.stop().fadeTo( 'fast', 1);
 			};
         });
