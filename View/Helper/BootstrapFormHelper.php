@@ -701,7 +701,7 @@ $("#'.$jsId.'").fineUploader({
 		);
 		$html = null;
 		$localStorageName = $options['model'].'-'.$this->counter;
-		$html .='<div id="modal-'.$this->counter.'" class="modal fade modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		$html .='<div id="modal-'.$this->counter.'" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content '.$options['model'].'-modal-content" id="modal-content"></div>
             </div>
