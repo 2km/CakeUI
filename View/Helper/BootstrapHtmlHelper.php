@@ -26,12 +26,12 @@ class BootstrapHtmlHelper extends HtmlHelper {
 		$html = '<ol class="breadcrumb">';
 		foreach ($data as $key => $value) {
 			if($value['link']!='#'){
-				$html .= '<li>'.$this->link($value['title'],$value['link']).'</li>';	
+				$html .= '<li>'.$this->link($value['title'],$value['link']).'</li>';
 			} else{
-				$html .= '<li>'.$value['title'].'</li>';	
+				$html .= '<li>'.$value['title'].'</li>';
 			}
 		}
-		$html .= '</ol>';	
+		$html .= '</ol>';
 		return $html;
 	}
 /*
@@ -62,7 +62,7 @@ class BootstrapHtmlHelper extends HtmlHelper {
 			if(isset($value['class']) && $value['class']=='disabled'){
 				$link = $this->link($value['title'],'#');
 			}
-			
+
 			if($firstKey == $key){
 				$html.='<li class="active '.$class.'">'.$link.'</li>';
 			} else {
@@ -80,7 +80,7 @@ class BootstrapHtmlHelper extends HtmlHelper {
 		}
 		$html.='</div><div class="clearAny"></div>';
 		if(isset($config['selected'])){
-			echo $this->scriptBlock('$("#'.$tabId.' a[href=\"#'.(Inflector::slug($data[$config['selected']]['title']).$this->counter.$config['selected']).'\"]").tab("show");',array('inline'=>false));	
+			echo $this->scriptBlock('$("#'.$tabId.' a[href=\"#'.(Inflector::slug($data[$config['selected']]['title']).$this->counter.$config['selected']).'\"]").tab("show");',array('inline'=>false));
 		}
 
 		return $html;
@@ -105,7 +105,7 @@ class BootstrapHtmlHelper extends HtmlHelper {
 			'color'=>'btn-default',
 			'split'=>false,
 			'dropup'=>false,
-			'form'=>array('submit'=>false,'field'=>'Tmp.operation')
+			'form'=>array('submit'=>false,'field'=>'Tmp.operation','id'=>'form')
 		);
 		$config['form'] = am($defaultConfig['form'],$config['form']);
 		$config = am($defaultConfig,$config);
@@ -117,41 +117,41 @@ class BootstrapHtmlHelper extends HtmlHelper {
 		if($config['dropup']){
 			$html .= '<div class="btn-group dropup">';
 		}else{
-			$html .= '<div class="btn-group">';	
+			$html .= '<div class="btn-group">';
 		}
 		$js = 'return false;';
 		if($config['form']['submit']){
 			$fieldId = $this->_getJSIDName($config['form']['field']);
-			$js = '$("#'.$fieldId.'").val("'.key($options).'");$(this).parents("form").submit();';
+			// $js = '$("#'.$fieldId.'").val("'.key($options).'");$(this).parents("form").submit();';
 		}
-		
+
 		if(!$config['split']){
-			$html .='<button type="button" onclick=\''.$js.'\' class="btn '.$config['size'].' '.$config['color'].' dropdown-toggle" data-toggle="dropdown">'.$title.'<span class="caret"></span></button>';	
+			$html .='<button type="button" onclick=\''.$js.'\' class="btn '.$config['size'].' '.$config['color'].' dropdown-toggle" data-toggle="dropdown">'.$title.'<span class="caret"></span></button>';
 		} else{
 			$html .='<button type="button" onclick=\''.$js.'\' class="btn '.$config['size'].' '.$config['color'].'">'.$title.'</button>';
 			$html .='<button type="button" class="btn '.$config['size'].' '.$config['color'].' dropdown-toggle" data-toggle="dropdown">';
 			$html .='<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
 		}
-		
+
 		$html .='<ul class="dropdown-menu" role="menu">';
 		foreach ($options as $key => $value) {
 			if($config['form']['submit']){
 				$link = '#';
 				$fieldId = $this->_getJSIDName($config['form']['field']);
-				$js = '$("#'.$fieldId.'").val("'.$key.'");$(this).parents("form").submit();';
-				$html .='<li>'.$this->link($value['title'],$link,array('onclick'=>$js)).'</li>';	
+				$js = '$("#'.$fieldId.'").val("'.$key.'");$("'.$config['form']['id'].'").submit();';
+				$html .='<li>'.$this->link($value['title'],$link,array('onclick'=>$js)).'</li>';
 			} else{
 				$link = isset($value['link'])?$value['link']:"#";
-				$html .='<li>'.$this->link($value['title'],$link).'</li>';	
+				$html .='<li>'.$this->link($value['title'],$link).'</li>';
 			}
-			
+
 		}
 		$html .='</ul>';
 		$html .='</div>';
 		if($config['form']['submit']){
 			$html .='</form>';
 		}
-			
+
 		return $html;
 	}
 	private function _getJSIDName($fieldName){
