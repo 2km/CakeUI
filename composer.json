@@ -1,5 +1,5 @@
 {
-    "name": "your-name-here/CakeUI",
+    "name": "2km/CakeUI",
     "description": "CakeUI plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
