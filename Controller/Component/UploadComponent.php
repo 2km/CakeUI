@@ -2,12 +2,12 @@
 class UploadComponent extends Object {
 	public $options = null;
 	public $settings = null;
-	
+
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		$this->settings = $settings;
 	    parent::__construct($collection, $settings);
-	}	
-	public function initialize($controller) { 
+	}
+	public function initialize($controller) {
 		if(!empty($controller->uses[0])){
 			$this->model = ClassRegistry::init($controller->uses[0]);
 		}else{
@@ -25,7 +25,7 @@ class UploadComponent extends Object {
 			}
 			if(!isset($this->settings[$fieldToUpload]['path'])){
 				$this->settings[$fieldToUpload]['path']='uploads';
-			}		
+			}
 			if($controller->RequestHandler->isAjax()){
 				$controller->autoRender=false;
 				echo $this->_do_upload($controller->request->data["qqFieldName"]);
@@ -37,7 +37,7 @@ class UploadComponent extends Object {
 	public function beforeRender($controller) {}
 	public function beforeRedirect($controller) {}
 	public function shutdown($controller) {}
-	
+
 	private function _do_upload($fieldName){
 		App::import('Vendor', 'CakeUI.ajaxUploader', array('file' => 'fineuploader'.DS.'php.php'));
 		$allowedExtensions = $this->settings[$fieldName]['allow'];

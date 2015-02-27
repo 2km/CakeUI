@@ -133,7 +133,11 @@ class BootstrapFormHelper extends FormHelper {
 		}
 		$options = $this->_parseOptions($options);
 		if($options['type']=='checkbox'){
-			$options['div']['class']='checkbox';
+			if(empty($options['div']['class'])){
+				$options['div']['class']='checkbox';
+			} else {
+				$options['div']['class'].=' checkbox';
+			}
 		}
 		return parent::input($fieldName, $options);
 	}

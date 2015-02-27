@@ -76,6 +76,6 @@
                 <div class="modal-content" id="modal-content"></div>
             </div>
         </div>
-
+        <?php echo $this->element('sql_dump'); ?>
     </body>
 </html>

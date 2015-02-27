@@ -34,7 +34,7 @@
             }
             return false;
         });
-    ', array('inline'=>'false'));
+    ', array('inline'=>false));
     $this->Js->get('#formSendModal')->event('click',
         $this->Js->request(
             array(
