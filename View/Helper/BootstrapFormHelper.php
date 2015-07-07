@@ -670,11 +670,18 @@ $("#'.$jsId.'").fineUploader({
 							complete:function (XMLHttpRequest, textStatus) {$("#zipcodeIndicator").hide();},
 							dataType:"html",
 							success:function (data, textStatus){
-								if(data!="null"){
-									data = jQuery.parseJSON(data);
-								}else{
+								try{
+									data= $.parseJSON(data);
+								}
+								catch(err){
 									data = null
-								} '.$ajaxOptions['callback'].'},
+								}
+								'.$ajaxOptions['callback'].'},
+							error: function(XMLHttpRequest, textStatus){
+								$("#zipcodeIndicator").hide();
+								data = null;
+								'.$ajaxOptions['callback'].'
+							},
 							type:"get",
 							url: "http://cep.correiocontrol.com.br/"+cep+".json"
 						});
