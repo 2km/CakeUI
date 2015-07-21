@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* SVN FILE: $Id: tree.php 205 2008-08-13 14:13:32Z ad7six $ */
 /**
  * Tree Helper.
@@ -72,7 +72,7 @@ class TreeHelper extends AppHelper {
  */
 	var $helpers = array ('Html');
 	public $view=null;
-	
+
 	function __construct(View $View, $settings = array()){
 		$this->view = $View;
 	}
