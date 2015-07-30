@@ -301,12 +301,15 @@ class BootstrapFormHelper extends FormHelper {
 						} else{
 							$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$this->request->data[$model][$key][$field]).'</p>';
 						}
-
+						$divId = '#'.$jsId.'-'.$this->ajaxUploadCounter;
+						$fieldId = '#'.$this->domId($model.'.'.$key.'.id');
+						$htmlImageArea .= $this->Html->link('Apagar','#',['onclick'=>'$("'.$divId.' p").html("");$("'.$fieldId.'").val("");$(this).remove();return false;']);
 					}
 					if(isset($uploadOptions['original_name'])){
 						$htmlImageArea .= $this->input($model.'.'.$key.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
 						$htmlImageArea .= '<p>'.$this->value($model.'.'.$key.'.'.$uploadOptions['original_name']).'</p>';
 					}
+
 				}
 			} else {
 				$htmlImageArea .= $this->input($model.'.'.$field,array('type'=>'hidden'));
@@ -316,17 +319,21 @@ class BootstrapFormHelper extends FormHelper {
 					} else {
 						$htmlImageArea .= '<p>'.$this->Html->image('../'.$uploadOptions['path'].'/'.$uploadOptions['resizedPath'].'/'.$this->request->data[$model][$field]).'</p>';
 					}
+					$divId = '#'.$jsId.'-'.$this->ajaxUploadCounter;
+					$fieldId = '#'.$this->domId($model.'.'.$field);
+					$htmlImageArea .= $this->Html->link('Apagar','#',['onclick'=>'$("'.$divId.' p").html("");$("'.$fieldId.'").val("");$(this).remove();return false;']);
 				}
 				if(isset($uploadOptions['original_name'])){
 					$htmlImageArea .= $this->input($model.'.'.$uploadOptions['original_name'],array('type'=>'hidden'));
 					$htmlImageArea .= '<p>'.$this->value($model.'.'.$uploadOptions['original_name']).'</p>';
 				}
+
 			}
 		}
 
 		$htmlImageArea .= '</div>';
 		$html='
-<div id="'.$jsId.'"></div>
+<div id="div-'.$jsId.'"></div>
 <script type="text/template" id="template-'.$jsId.'">
   <div class="qq-uploader-selector qq-uploader span12">
     <div class="qq-upload-drop-area-selector qq-upload-drop-area span12" qq-hide-dropzone>
@@ -362,7 +369,7 @@ class BootstrapFormHelper extends FormHelper {
 //------------------------------------------------Component JS---------------------------------------------------------------------------------------
 		$js = '
 var position='.(strlen($key)==0?0:$key).';
-$("#'.$jsId.'").fineUploader({
+$("#div-'.$jsId.'").fineUploader({
 	template: "template-'.$jsId.'",
 	multiple: '.$uploadOptions['multiple'].',
 	request: {
