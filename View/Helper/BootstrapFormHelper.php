@@ -844,7 +844,7 @@ $("#div-'.$jsId.'").fineUploader({
 		$table_id = "CakeUI".$model.'-'.$this->counter;
 		$html .= "<table class='table' id='".$table_id."'><thead><tr>";
 		foreach($fields as $fieldName=>$options){
-			if(isset($value['form']['label'])){
+			if(isset($options['form']['label'])){
 				$html .= "<th>".$options['form']['label']."</th>";
 			} else{
 				$html.= "<th width='0'></th>";
