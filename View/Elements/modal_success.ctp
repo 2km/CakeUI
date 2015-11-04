@@ -42,7 +42,7 @@ foreach($requestData[$options['model']] as $field=>$value){
 			$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$field.".",array('value'=>$valueTemp,'type'=>'hidden'));
 		}
 	}else{
-		$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$field,array('value'=>$value,'type'=>'hidden'));
+		$formFields .= $this->Form->input($options["model"].".".$requestData['CakeUITemp']['key'].".".$field,array('value'=>str_replace(["\n","\r","\n\r"], "", nl2br($value)),'type'=>'hidden'));
 	}
 }
 if(isset($options['extra_model'])){
@@ -59,7 +59,13 @@ if(!empty($requestData[$options['model']]['id'])){ //Actions will be in database
 	$row_td .=
 		"<td class='actions'>".
 			addslashes($formFields).
-			addslashes($this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUILocalStorageName'=>$CakeUILocalStorageName,'CakeUIRecordId'=>$requestData[$options['model']]['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$requestData['CakeUITemp']['key'].'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?'))))." ".
+			addslashes(
+				$this->Js->link("Delete",
+					array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUILocalStorageName'=>$CakeUILocalStorageName,'CakeUIRecordId'=>$requestData[$options['model']]['id'],String::toList($this->request->params['pass'],',')),
+					array('method'=>'post',
+						'dataExpression'=>true,
+						'data'=>'$("#row-'.$requestData['CakeUITemp']['key'].'").closest("form").serialize()+"&"+$.param(JSON.parse(localStorage.getItem("'.$CakeUILocalStorageName.'")))',
+						'success' => '$("#row-'.$requestData['CakeUITemp']['key'].'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?'))))." ".
 			addslashes($this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$requestData['CakeUITemp']['key'].'","'.$editUrl .'","'.$options['model'].'","'.$CakeUILocalStorageName.'")'))).
 		"</td>";
 } else { //Actions will be only in window

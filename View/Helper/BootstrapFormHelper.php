@@ -815,8 +815,16 @@ $("#div-'.$jsId.'").fineUploader({
 				$html .=
 					"<td class='actions'>".
 						$formFields.
-						$this->Js->link("Delete",array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUILocalStorageName'=>$local_storage_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),array('success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
-						$this->Html->link(__("Editar"),"#",array('class'=>'btn btn-xs btn-warning','onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'","'.$local_storage_name.'")')).
+						$this->Js->link("Delete",
+							array('action'=>$this->action,'CakeUIOperation'=>3,'CakeUILocalStorageName'=>$local_storage_name,'CakeUIRecordId'=>$fields['id'],String::toList($this->request->params['pass'],',')),
+							array('method'=>'post',
+								'dataExpression'=>true,
+								'data'=>'$("#row-'.$key.'").closest("form").serialize()+"&"+$.param(JSON.parse(localStorage.getItem("'.$local_storage_name.'")))',
+								'success' => '$("#row-'.$key.'").remove();if($("#'.$options['table_id'].' tbody tr").size()==0){$("#'.$options['table_id'].'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-xs btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+
+						$this->Html->link(__("Editar"),"#",array(
+							'class'=>'btn btn-xs btn-warning',
+							'onclick'=>'cakeUIEditRow("'.'row-'.$key.'","'.$editUrl .'","'.$options['model'].'","'.$local_storage_name.'")')).
 					"</td>";
 			}
 			$html .= "</tr>";
