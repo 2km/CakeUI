@@ -862,12 +862,13 @@ $("#div-'.$jsId.'").fineUploader({
 		$html .= "</tr></thead><tbody>";
 		foreach ($this->request->data[$model] as $key => $req_values) {
 			$html .= "<tr id='".$model."-row-".$key."'>";
-			foreach($req_values as $fieldName=>$fieldValue){
+			if(isset($this->request->data[$model][$key]['id'])){
+				$html .=$this->input($model.".".$key.".id",array('type'=>'hidden'));
+			}
+			foreach($fields as $fieldName=>$fieldValue){
 				if(isset($fields[$fieldName])){
 					$fields[$fieldName]['form']['label']=false;
 					$html .= "<td>".$this->input($model.".".$key.".".$fieldName,$fields[$fieldName]['form'])."</td>";
-				} else{
-					$html .=$this->input($model.".".$key.".".$fieldName,array('type'=>'hidden'));
 				}
 			}
 			if(empty($req_values['id'])){
@@ -878,8 +879,7 @@ $("#div-'.$jsId.'").fineUploader({
 			} else{
 				$html .=
 					"<td class='actions'>".
-						// $this->Js->link("Delete",array('action'=>$this->action,'CakeUIModel'=>$model,'CakeUIRecord'=>$req_values['id']),array('success' => 'cakeUIDeleteRow("'.'row-'.$key.'","'.$table_id.'")','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
-					$this->Js->link("Delete",array('controller'=>Inflector::pluralize($model),'action'=>'delete',$req_values['id']),array('success' => '$("#'.$model.'-row-'.$key.'").remove();if($("#'.$table_id.' tbody tr").size()==0){$("#'.$table_id.'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
+					$this->Js->link("Delete",array('controller'=>Inflector::pluralize($model),'action'=>'delete',$req_values['id']),array('method'=>'post','success' => '$("#'.$model.'-row-'.$key.'").remove();if($("#'.$table_id.' tbody tr").size()==0){$("#'.$table_id.'").remove();}','error'=>'alert("'.__("Problema ao tentar apagar o item").'")', 'class'=>'btn btn-danger','confirm'=>__('Deseja apagar o item?')))." ".
 					"</td>";
 			}
 			$html .= "</tr>";
