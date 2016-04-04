@@ -663,8 +663,8 @@ $("#div-' . $jsId . '").fineUploader({
 				if(zipcodeJson != null){
 					$("#' . $ajaxOptions['streetField'] . '").val(zipcodeJson.logradouro);
 					$("#' . $ajaxOptions['districtField'] . '").val(zipcodeJson.bairro);
-					$("#' . $ajaxOptions['cityField'] . '").val(zipcodeJson.localidade);
-					$("#' . $ajaxOptions['stateField'] . '").val(zipcodeJson.uf);
+					$("#' . $ajaxOptions['cityField'] . '").val(zipcodeJson.cidade);
+					$("#' . $ajaxOptions['stateField'] . '").val(zipcodeJson.estado);
 					$("#zipcodeContainer").hide().removeClass("hidden").slideDown("fast");
 					$("#' . $ajaxOptions['numberField'] . '").focus();
 				} else {
@@ -703,7 +703,7 @@ $("#div-' . $jsId . '").fineUploader({
 								' . $ajaxOptions['callback'] . '
 							},
 							type:"get",
-							url: "http://cep.correiocontrol.com.br/"+cep+".json"
+							url: "http://api.postmon.com.br/v1/cep/"+cep
 						});
 					}
 				});
