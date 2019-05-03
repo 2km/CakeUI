@@ -703,7 +703,7 @@ $("#div-' . $jsId . '").fineUploader({
 								' . $ajaxOptions['callback'] . '
 							},
 							type:"get",
-							url: "http://api.postmon.com.br/v1/cep/"+cep
+							url: "https://api.postmon.com.br/v1/cep/"+cep
 						});
 					}
 				});
